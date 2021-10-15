@@ -1,0 +1,52 @@
+package com.jasekraft.splendor.mvc.services;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.jasekraft.splendor.mvc.models.Card;
+import com.jasekraft.splendor.mvc.repositories.CardRepository;
+
+@Service
+public class CardService {
+	private final CardRepository cardRepo;
+	
+	public CardService(CardRepository cardRepo) {
+		this.cardRepo = cardRepo;
+	}
+
+    public List<Card> all() {
+    	
+        return cardRepo.findAll();
+    }
+
+    public Card create(Card p) {
+        return cardRepo.save(p);
+    }
+
+    public Card find(Long id) {
+        Optional<Card> optionalCard = cardRepo.findById(id);
+        if(optionalCard.isPresent()) {
+            return optionalCard.get();
+        } else {
+            return null;
+        }
+    }
+
+    
+    public void delete(long id) {
+    	cardRepo.deleteById(id);
+    }
+    
+    public Card update(Card card) {
+    	Optional<Card> optionalCard = cardRepo.findById(card.getId());
+    	if(optionalCard.isPresent()) {
+    		cardRepo.save(card);
+    		return card;
+    	}
+    	else {
+    		return null;
+    	}
+    }
+}
