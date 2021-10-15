@@ -3,19 +3,29 @@ package com.jasekraft.splendor.mvc.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasekraft.splendor.mvc.models.CardCost;
+import com.jasekraft.splendor.mvc.models.Card;
+import com.jasekraft.splendor.mvc.models.Token;
 import com.jasekraft.splendor.mvc.repositories.CardCostRepository;
 
 @Service
 public class CardCostService {
 	private final CardCostRepository cardcostRepo;
+	private final TokenService tokenServ;
+	private final CardService cardServ;
 	
-	public CardCostService(CardCostRepository cardcostRepo) {
+    @Autowired	
+	public CardCostService(CardCostRepository cardcostRepo,
+			TokenService tokenServ, CardService cardServ) {
 		this.cardcostRepo = cardcostRepo;
+        this.tokenServ = tokenServ;
+        this.cardServ = cardServ;
 	}
-
+	
+	// CRUD
     public List<CardCost> all() {
     	
         return cardcostRepo.findAll();
@@ -33,8 +43,7 @@ public class CardCostService {
             return null;
         }
     }
-
-    
+        
     public void delete(long id) {
     	cardcostRepo.deleteById(id);
     }
@@ -49,4 +58,20 @@ public class CardCostService {
     		return null;
     	}
     }
+    
+    // Relation methods
+    
+	public void addRelation(Long tokenId,Long cardId) {
+		Token thisToken = tokenServ.find(tokenId);
+	    Card thisCard = cardServ.find(cardId);
+	    thisToken.getCards().add(thisCard);
+	    tokenServ.update(thisToken);	
+	}
+	
+	public void removeRelation(Long tokenId, Long cardId) {
+		Token thisToken = tokenServ.find(tokenId);
+	    Card thisCard = cardServ.find(cardId);
+	    thisToken.getCards().remove(thisCard);
+	    tokenServ.update(thisToken);	
+	}
 }

@@ -5,19 +5,23 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.Token;
 import com.jasekraft.splendor.mvc.repositories.TokenRepository;
 
 @Service
 public class TokenService {
 	private final TokenRepository tokenRepo;
-	
+
 	public TokenService(TokenRepository tokenRepo) {
 		this.tokenRepo = tokenRepo;
 	}
-
-    public List<Token> all() {
-    	
+	//Unique
+	public List<Token> tokensByPlayer(Player	player){
+		return tokenRepo.findAllByPlayers(player);
+	}
+	//CRUD
+	public List<Token> all() {
         return tokenRepo.findAll();
     }
 
@@ -34,7 +38,6 @@ public class TokenService {
         }
     }
 
-    
     public void delete(long id) {
     	tokenRepo.deleteById(id);
     }
