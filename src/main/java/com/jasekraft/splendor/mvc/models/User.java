@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -43,12 +44,7 @@ public class User {
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "users_players", 
-        joinColumns = @JoinColumn(name = "user_id"), 
-        inverseJoinColumns = @JoinColumn(name = "player_id")
-    )
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Player> players;
 	
 	public User() {}
@@ -111,5 +107,6 @@ public class User {
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
-	
+
+
 }

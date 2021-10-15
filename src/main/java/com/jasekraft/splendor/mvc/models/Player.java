@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,13 +20,9 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "users_players", 
-        joinColumns = @JoinColumn(name = "player_id"), 
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 	
 	@ManyToMany
     @JoinTable(
@@ -69,11 +66,13 @@ public class Player {
 		this.id = id;
 	}
 
-	public List<User> getUser() {
+
+
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(List<User> user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
