@@ -57,6 +57,10 @@ public class Player {
     private List<Game> games;
     
     public Player() {}
+    
+    public Player(User user) {
+    	this.user = user;
+    }
 
 	public Long getId() {
 		return id;

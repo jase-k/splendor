@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jasekraft.splendor.mvc.models.Card;
 import com.jasekraft.splendor.mvc.models.CardDeck;
 import com.jasekraft.splendor.mvc.models.Deck;
-import com.jasekraft.splendor.mvc.models.Card;
 import com.jasekraft.splendor.mvc.repositories.CardDeckRepository;
 
 @Service
@@ -36,6 +36,15 @@ public class CardDeckService {
 
     public CardDeck find(Long id) {
         Optional<CardDeck> optionalCardDeck = carddeckRepo.findById(id);
+        if(optionalCardDeck.isPresent()) {
+            return optionalCardDeck.get();
+        } else {
+            return null;
+        }
+    }
+    
+    public CardDeck find(Deck deck, Card card) {
+        Optional<CardDeck> optionalCardDeck = carddeckRepo.findByDeckAndCard(deck, card);
         if(optionalCardDeck.isPresent()) {
             return optionalCardDeck.get();
         } else {
