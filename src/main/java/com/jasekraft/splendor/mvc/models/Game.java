@@ -14,12 +14,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.jasekraft.projectmanager.mvc.models.Project;
 
 @Entity
 @Table(name="games")
@@ -61,6 +61,15 @@ public class Game {
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
     private List<Noble> nobles;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+    		name = "games_players",
+    		joinColumns = @JoinColumn(name = "game_id"),
+    		inverseJoinColumns = @JoinColumn(name = "player_id")
+    		)
+    private List<Player> players;
+    
 
 	public Game() {
 	}

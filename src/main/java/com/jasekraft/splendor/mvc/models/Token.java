@@ -13,8 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.jasekraft.projectmanager.mvc.models.Project;
-
 @Entity
 @Table(name="tokens")
 public class Token {
