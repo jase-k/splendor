@@ -1,1 +1,0 @@
-Splendor Game App
