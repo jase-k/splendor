@@ -11,7 +11,7 @@ import com.jasekraft.splendor.mvc.models.CardDeck;
 public interface CardDeckRepository extends CrudRepository<CardDeck, Long>{
 	 
 	// this method retrieves all the carddeck rows from the database
-	 List<CardDeck> findAll();
-	 
+	List<CardDeck> findAll();
+	
 	 	 
 }

@@ -3,21 +3,30 @@ package com.jasekraft.splendor.mvc.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasekraft.splendor.mvc.models.CardDeck;
+import com.jasekraft.splendor.mvc.models.Deck;
+import com.jasekraft.splendor.mvc.models.Card;
 import com.jasekraft.splendor.mvc.repositories.CardDeckRepository;
 
 @Service
 public class CardDeckService {
 	private final CardDeckRepository carddeckRepo;
+	private final CardService cardServ;
+	private final DeckService deckServ;
 	
-	public CardDeckService(CardDeckRepository carddeckRepo) {
+    @Autowired
+	public CardDeckService(CardDeckRepository carddeckRepo,
+			CardService cardServ, DeckService deckServ) {
 		this.carddeckRepo = carddeckRepo;
+		this.cardServ = cardServ;
+	    this.deckServ = deckServ;
 	}
-
+    
+    //CRUD
     public List<CardDeck> all() {
-    	
         return carddeckRepo.findAll();
     }
 
@@ -34,7 +43,6 @@ public class CardDeckService {
         }
     }
 
-    
     public void delete(long id) {
     	carddeckRepo.deleteById(id);
     }
@@ -49,4 +57,20 @@ public class CardDeckService {
     		return null;
     	}
     }
+    
+    // Add remove relations
+	public void addRelation(Long cardId,Long deckId) {
+		Card thisCard = cardServ.find(cardId);
+	    Deck thisDeck = deckServ.find(deckId);
+	    thisCard.getDecks().add(thisDeck);
+	    cardServ.update(thisCard);	
+	}
+	
+	public void removeRelation(Long cardId, Long deckId) {
+		Card thisCard = cardServ.find(cardId);
+	    Deck thisDeck = deckServ.find(deckId);
+	    thisCard.getDecks().remove(thisDeck);
+	    cardServ.update(thisCard);	
+	}
+    
 }

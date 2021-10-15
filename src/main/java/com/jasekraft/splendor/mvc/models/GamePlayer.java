@@ -17,6 +17,21 @@ public class GamePlayer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+	@Positive
+	private Integer position;
+	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="game_id")
+    private Game game;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="player_id")
+    private Player player;
+    
+    public GamePlayer() {
+    	
+    }
+    
 	public Long getId() {
 		return id;
 	}
@@ -49,19 +64,5 @@ public class GamePlayer {
 		this.player = player;
 	}
 
-	@Positive
-	private Integer position;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="game_id")
-    private Game game;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="player_id")
-    private Player player;
-    
-    public GamePlayer() {
-    	
-    }
 
 }

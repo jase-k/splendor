@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.jasekraft.splendor.mvc.models.Card;
+import com.jasekraft.splendor.mvc.models.Deck;
+import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.repositories.CardRepository;
 
 @Service
@@ -15,9 +17,18 @@ public class CardService {
 	public CardService(CardRepository cardRepo) {
 		this.cardRepo = cardRepo;
 	}
-
+	
+    //Unique
+	public List<Card> cardsByDeck(Deck deck){
+		return cardRepo.findAllByDecks(deck);
+	}
+	
+	public List<Card> cardsByPlayers(Player player){
+		return cardRepo.findAllByPlayers(player);
+	}
+	
+	//CRUD
     public List<Card> all() {
-    	
         return cardRepo.findAll();
     }
 
@@ -33,7 +44,6 @@ public class CardService {
             return null;
         }
     }
-
     
     public void delete(long id) {
     	cardRepo.deleteById(id);

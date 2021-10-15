@@ -17,7 +17,6 @@ public class GameService {
 	}
 
     public List<Game> all() {
-    	
         return gameRepo.findAll();
     }
 
@@ -34,7 +33,6 @@ public class GameService {
         }
     }
 
-    
     public void delete(long id) {
     	gameRepo.deleteById(id);
     }

@@ -11,7 +11,6 @@ import com.jasekraft.splendor.mvc.models.CardCost;
 public interface CardCostRepository extends CrudRepository<CardCost, Long>{
 	 
 	// this method retrieves all the cardcost rows from the database
-	 List<CardCost> findAll();
-	 
-	 	 
+	List<CardCost> findAll();
+	  	 
 }
