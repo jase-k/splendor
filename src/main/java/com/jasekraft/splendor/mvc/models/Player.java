@@ -70,8 +70,6 @@ public class Player {
 		this.id = id;
 	}
 
-
-
 	public User getUser() {
 		return user;
 	}

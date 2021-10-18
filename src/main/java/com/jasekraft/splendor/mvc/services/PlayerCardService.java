@@ -9,33 +9,44 @@ import org.springframework.stereotype.Service;
 import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.Card;
 import com.jasekraft.splendor.mvc.models.PlayerCard;
+import com.jasekraft.splendor.mvc.models.Deck;
+import com.jasekraft.splendor.mvc.models.PlayerCard;
 import com.jasekraft.splendor.mvc.repositories.PlayerCardRepository;
 
 @Service
 public class PlayerCardService {
-	private final PlayerCardRepository playercardRepo;
+	private final PlayerCardRepository playerCardRepo;
 	private final PlayerService playerServ;
 	private final CardService cardServ;
 	
     @Autowired
-	public PlayerCardService(PlayerCardRepository playercardRepo,
+	public PlayerCardService(PlayerCardRepository playerCardRepo,
 			PlayerService playerServ, CardService cardServ) {
-		this.playercardRepo = playercardRepo;
+		this.playerCardRepo = playerCardRepo;
         this.playerServ = playerServ;
         this.cardServ = cardServ;
 	}
 	
 	//CRUD
     public List<PlayerCard> all() {
-        return playercardRepo.findAll();
+        return playerCardRepo.findAll();
     }
 
     public PlayerCard create(PlayerCard p) {
-        return playercardRepo.save(p);
+        return playerCardRepo.save(p);
     }
 
     public PlayerCard find(Long id) {
-        Optional<PlayerCard> optionalPlayerCard = playercardRepo.findById(id);
+        Optional<PlayerCard> optionalPlayerCard = playerCardRepo.findById(id);
+        if(optionalPlayerCard.isPresent()) {
+            return optionalPlayerCard.get();
+        } else {
+            return null;
+        }
+    }
+    
+    public PlayerCard find(Card card, Player player) {
+        Optional<PlayerCard> optionalPlayerCard = playerCardRepo.findByCardAndPlayer(card, player);
         if(optionalPlayerCard.isPresent()) {
             return optionalPlayerCard.get();
         } else {
@@ -43,15 +54,16 @@ public class PlayerCardService {
         }
     }
 
+
     public void delete(long id) {
-    	playercardRepo.deleteById(id);
+    	playerCardRepo.deleteById(id);
     }
     
-    public PlayerCard update(PlayerCard playercard) {
-    	Optional<PlayerCard> optionalPlayerCard = playercardRepo.findById(playercard.getId());
+    public PlayerCard update(PlayerCard playerCard) {
+    	Optional<PlayerCard> optionalPlayerCard = playerCardRepo.findById(playerCard.getId());
     	if(optionalPlayerCard.isPresent()) {
-    		playercardRepo.save(playercard);
-    		return playercard;
+    		playerCardRepo.save(playerCard);
+    		return playerCard;
     	}
     	else {
     		return null;

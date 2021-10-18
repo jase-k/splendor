@@ -13,29 +13,29 @@ import com.jasekraft.splendor.mvc.repositories.CardDeckRepository;
 
 @Service
 public class CardDeckService {
-	private final CardDeckRepository carddeckRepo;
+	private final CardDeckRepository cardDeckRepo;
 	private final CardService cardServ;
 	private final DeckService deckServ;
 	
     @Autowired
-	public CardDeckService(CardDeckRepository carddeckRepo,
+	public CardDeckService(CardDeckRepository cardDeckRepo,
 			CardService cardServ, DeckService deckServ) {
-		this.carddeckRepo = carddeckRepo;
+		this.cardDeckRepo = cardDeckRepo;
 		this.cardServ = cardServ;
 	    this.deckServ = deckServ;
 	}
     
     //CRUD
     public List<CardDeck> all() {
-        return carddeckRepo.findAll();
+        return cardDeckRepo.findAll();
     }
 
     public CardDeck create(CardDeck p) {
-        return carddeckRepo.save(p);
+        return cardDeckRepo.save(p);
     }
 
     public CardDeck find(Long id) {
-        Optional<CardDeck> optionalCardDeck = carddeckRepo.findById(id);
+        Optional<CardDeck> optionalCardDeck = cardDeckRepo.findById(id);
         if(optionalCardDeck.isPresent()) {
             return optionalCardDeck.get();
         } else {
@@ -44,7 +44,7 @@ public class CardDeckService {
     }
     
     public CardDeck find(Deck deck, Card card) {
-        Optional<CardDeck> optionalCardDeck = carddeckRepo.findByDeckAndCard(deck, card);
+        Optional<CardDeck> optionalCardDeck = cardDeckRepo.findByDeckAndCard(deck, card);
         if(optionalCardDeck.isPresent()) {
             return optionalCardDeck.get();
         } else {
@@ -53,14 +53,14 @@ public class CardDeckService {
     }
 
     public void delete(long id) {
-    	carddeckRepo.deleteById(id);
+    	cardDeckRepo.deleteById(id);
     }
     
-    public CardDeck update(CardDeck carddeck) {
-    	Optional<CardDeck> optionalCardDeck = carddeckRepo.findById(carddeck.getId());
+    public CardDeck update(CardDeck cardDeck) {
+    	Optional<CardDeck> optionalCardDeck = cardDeckRepo.findById(cardDeck.getId());
     	if(optionalCardDeck.isPresent()) {
-    		carddeckRepo.save(carddeck);
-    		return carddeck;
+    		cardDeckRepo.save(cardDeck);
+    		return cardDeck;
     	}
     	else {
     		return null;

@@ -21,6 +21,7 @@ public class GameService {
 	private final DeckService deckServ;
 	private final CardService cardServ;
 	private final CardDeckService cardDeckServ;
+	private final PlayerService playerServ;
 	
 	private final int totalTokens = 7;
 	private final int goldTokens = 5;
@@ -28,13 +29,14 @@ public class GameService {
 	
 	public GameService(GameRepository gameRepo, TokenService tokenServ, 
 			NobleService nobleServ, DeckService deckServ, CardService cardServ,
-			CardDeckService cardDeckServ) {
+			CardDeckService cardDeckServ, PlayerService playerServ) {
 		this.gameRepo = gameRepo;
 		this.tokenServ = tokenServ;
         this.nobleServ = nobleServ;
         this.deckServ = deckServ;
         this.cardServ = cardServ;
         this.cardDeckServ = cardDeckServ;
+        this.playerServ = playerServ;
 	}
 	//Unique
 	public void initialize(Game game) {
@@ -72,7 +74,7 @@ public class GameService {
 					game.getTokens().add(thisToken);
 				}			
 		}
-		
+		update(game);
 	}
 	//CRUD
     public List<Game> all() {
@@ -106,7 +108,6 @@ public class GameService {
     		return null;
     	}
     }
-    
     // Add remove tokens
 	public void addToken(Long tokenId,Long gameId) {
 		Token thisToken = tokenServ.find(tokenId);

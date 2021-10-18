@@ -11,8 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name="noble")
@@ -21,9 +20,8 @@ public class Noble {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull
-    @Min(1)
-    private String score;
+	@PositiveOrZero
+	private Integer score;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -59,11 +57,11 @@ public class Noble {
 		this.id = id;
 	}
 
-	public String getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(Integer score) {
 		this.score = score;
 	}
 

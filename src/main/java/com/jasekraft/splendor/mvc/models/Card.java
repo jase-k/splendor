@@ -17,6 +17,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,7 +36,7 @@ public class Card {
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
-	@Positive
+	@PositiveOrZero
 	private Integer score;
 	
     @ManyToOne(fetch = FetchType.LAZY)
