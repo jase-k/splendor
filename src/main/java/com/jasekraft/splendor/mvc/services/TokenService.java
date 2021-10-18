@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.Token;
 import com.jasekraft.splendor.mvc.repositories.TokenRepository;
@@ -13,6 +14,8 @@ import com.jasekraft.splendor.mvc.repositories.TokenRepository;
 public class TokenService {
 	private final TokenRepository tokenRepo;
 
+	private final int goldTokens = 5;
+	
 	public TokenService(TokenRepository tokenRepo) {
 		this.tokenRepo = tokenRepo;
 	}
@@ -37,6 +40,15 @@ public class TokenService {
             return null;
         }
     }
+    
+    public Token find(String name) {
+        Optional<Token> optionalToken = tokenRepo.findByName(name);
+        if(optionalToken.isPresent()) {
+            return optionalToken.get();
+        } else {
+            return null;
+        }
+    }
 
     public void delete(long id) {
     	tokenRepo.deleteById(id);
@@ -51,5 +63,37 @@ public class TokenService {
     	else {
     		return null;
     	}
+    }
+    
+    // initializes tokens for game
+    public void init(Game game, int totalTokens) {
+    	List<Token> tokens = all();
+    	for(Token t : tokens) {
+			if(t.getName().equals("gold"))
+				for(int i = 0; i<goldTokens; i++) {
+					Token thisToken = find(t.getId());
+					game.getTokens().add(thisToken);
+				}
+			else
+				for(int i = 0; i<totalTokens; i++) {
+					Token thisToken = find(t.getId());
+					game.getTokens().add(thisToken);
+				}			
+		}
+    }
+    // initializes tokens for all games
+    public void init() {
+    	Token tokenBla = new Token("black");
+    	Token tokenBlu = new Token("blue");
+    	Token tokenR = new Token("red");
+    	Token tokenW = new Token("white");
+    	Token tokenG = new Token("green");
+    	Token tokenGol = new Token("gold");
+    	tokenRepo.save(tokenBla);
+    	tokenRepo.save(tokenBlu);
+    	tokenRepo.save(tokenR);
+    	tokenRepo.save(tokenW);
+    	tokenRepo.save(tokenG);
+    	tokenRepo.save(tokenGol);
     }
 }

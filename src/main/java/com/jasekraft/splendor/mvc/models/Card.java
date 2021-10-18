@@ -69,7 +69,10 @@ public class Card {
 
 	public Card() {
 	}
-
+	
+	public Card(Integer score) {
+		this.score = score;
+	}
 	public Card(@Positive Integer score, Token token, List<Player> players, List<Deck> decks, List<Token> tokens) {
 		super();
 		this.score = score;

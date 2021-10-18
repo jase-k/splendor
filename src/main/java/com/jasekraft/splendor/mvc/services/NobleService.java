@@ -2,6 +2,7 @@ package com.jasekraft.splendor.mvc.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,4 +62,26 @@ public class NobleService {
 			return null;
 		}
 	}
+	// Adds nobles to game
+	public void init(Game game, int totalNobles) {
+		List<Noble> nobles = shuffleNobles(all());
+		for(int i = 0; i<totalNobles;i++) {
+			Noble thisNoble = find(nobles.get(i).getId());
+		    game.getNobles().add(thisNoble);
+		}
+	}
+	
+	// Shuffle Algorithm (modified Fisher-Yates)
+	public List<Noble> shuffleNobles(List<Noble> nobles){
+		Noble fake;
+		int randNum;
+		for(int i = nobles.size()-1;i>0;i--) {
+			randNum = ThreadLocalRandom.current().nextInt(0, i + 1);
+			fake = nobles.get(i);
+			nobles.set(i, nobles.get(randNum));
+			nobles.set(randNum, fake);
+		}
+		return nobles;
+	}
+	
 }

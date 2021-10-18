@@ -1,11 +1,11 @@
 package com.jasekraft.splendor.mvc.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.Token;
 
@@ -16,5 +16,7 @@ public interface TokenRepository extends CrudRepository<Token, Long>{
 	
 	// Finds all of specific token in the player
 	List<Token> findAllByPlayers(Player player);
-	 	 
+	
+	// finds token by name
+	Optional<Token> findByName(String name);
 }

@@ -6,10 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.Card;
-import com.jasekraft.splendor.mvc.models.PlayerCard;
-import com.jasekraft.splendor.mvc.models.Deck;
+import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.PlayerCard;
 import com.jasekraft.splendor.mvc.repositories.PlayerCardRepository;
 

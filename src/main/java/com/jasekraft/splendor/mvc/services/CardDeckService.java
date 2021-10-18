@@ -2,6 +2,7 @@ package com.jasekraft.splendor.mvc.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.jasekraft.splendor.mvc.models.Card;
 import com.jasekraft.splendor.mvc.models.CardDeck;
 import com.jasekraft.splendor.mvc.models.Deck;
+import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.repositories.CardDeckRepository;
+import com.jasekraft.splendor.mvc.repositories.GameRepository;
 
 @Service
 public class CardDeckService {
@@ -80,6 +83,49 @@ public class CardDeckService {
 	    Deck thisDeck = deckServ.find(deckId);
 	    thisCard.getDecks().remove(thisDeck);
 	    cardServ.update(thisCard);	
+	}
+	
+	// Initialize all cards
+	public void init(Game game) {
+		List<Card> greenCards = cardServ.all().subList(0, 40);
+		Deck deckG = new Deck("green", 0, game, greenCards);
+		deckServ.create(deckG);
+		List<Card> redCards = cardServ.all().subList(40, 70);
+		Deck deckR = new Deck("red", 0, game, redCards);
+		deckServ.create(deckR);
+		List<Card> blueCards = cardServ.all().subList(70, 90);
+		Deck deckB = new Deck("blue", 0, game, blueCards);
+		deckServ.create(deckB);
+		List<Deck> decks = game.getDecks();
+		decks.add(deckG);
+		decks.add(deckR);
+		decks.add(deckB);
+		for(Deck d : decks) {
+			d.setCards(shuffleCards(d.getCards()));
+			List<Card> cards = d.getCards();
+			for(int i = 0 ; i<cards.size(); i++) {
+				Card thisCard = cardServ.find(cards.get(i).getId());
+			    d.getCards().add(thisCard);
+			    // adds relation card to deck
+			    CardDeck relation = find(d, thisCard);
+			    relation.setPosition(i);
+			    update(relation);
+			}
+		}
+		//gameRepo.save(game);
+	}
+	
+	// Shuffle Algorithm (modified Fisher-Yates)
+	public List<Card> shuffleCards(List<Card> cards){
+		Card fake;
+		int randNum;
+		for(int i = cards.size()-1;i>0;i--) {
+			randNum = ThreadLocalRandom.current().nextInt(0, i + 1);
+			fake = cards.get(i);
+			cards.set(i, cards.get(randNum));
+			cards.set(randNum, fake);
+		}
+		return cards;
 	}
     
 }

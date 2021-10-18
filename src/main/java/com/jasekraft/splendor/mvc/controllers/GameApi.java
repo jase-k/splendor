@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.models.Player;
+import com.jasekraft.splendor.mvc.services.CardCostService;
 import com.jasekraft.splendor.mvc.services.GamePlayerService;
 import com.jasekraft.splendor.mvc.services.GameService;
+import com.jasekraft.splendor.mvc.services.NobleCostService;
 import com.jasekraft.splendor.mvc.services.PlayerService;
+import com.jasekraft.splendor.mvc.services.TokenService;
 import com.jasekraft.splendor.mvc.services.UserService;
 
 // Mappings are all tentative 
@@ -26,20 +29,39 @@ public class GameApi {
     private final GameService gameServ;
     private final PlayerService playerServ;
     private final GamePlayerService gamePlayerServ;
+    private final TokenService tokenServ;
+    private final NobleCostService nobleCostServ;
+    private final CardCostService cardCostServ;
+    
     @Autowired
-    public GameApi(UserService userServ, GameService gameServ, PlayerService playerServ, 
-    		GamePlayerService gamePlayerServ){
+    public GameApi(UserService userServ, GameService gameServ, 
+    		PlayerService playerServ, GamePlayerService gamePlayerServ, 
+    		TokenService tokenServ, NobleCostService nobleCostServ,
+    		CardCostService cardCostServ){
     	this.userServ = userServ;
         this.gameServ = gameServ;
         this.playerServ = playerServ;
         this.gamePlayerServ = gamePlayerServ;
+        this.tokenServ = tokenServ;
+        this.nobleCostServ = nobleCostServ;
+        this.cardCostServ = cardCostServ;
     }
     @RequestMapping("/games")
     @ResponseBody
     public List<Game> index() {
         return gameServ.all();
     }
-    
+    @RequestMapping(value = "/dbinit", method=RequestMethod.POST)
+    public void init(@RequestBody Map<String, Object> body) {
+        if(body.get("password").equals("root")) {
+        	// creates the tokens
+        	tokenServ.init();
+        	// creates and assigns cost to nobles
+        	nobleCostServ.init();
+        	// creates and assigns cost to cards
+        	cardCostServ.init();
+        }
+    }
     @RequestMapping("/games/new")
     public Game createGame() {
     	Game g = new Game();

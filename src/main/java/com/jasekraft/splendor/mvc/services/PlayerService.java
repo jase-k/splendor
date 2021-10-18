@@ -14,6 +14,7 @@ import com.jasekraft.splendor.mvc.models.Player;
 import com.jasekraft.splendor.mvc.models.PlayerCard;
 import com.jasekraft.splendor.mvc.models.Token;
 import com.jasekraft.splendor.mvc.models.User;
+import com.jasekraft.splendor.mvc.repositories.PlayerCardRepository;
 import com.jasekraft.splendor.mvc.repositories.PlayerRepository;
 
 @Service
@@ -22,19 +23,19 @@ public class PlayerService {
     private final GameService gameServ;
     private final TokenService tokenServ;
     private final CardService cardServ;
-    private final PlayerCardService playerCardServ;
+    private final PlayerCardRepository playerCardRepo;
     private final NobleService nobleServ;
     
     @Autowired
     public PlayerService(PlayerRepository playerRepo, 
     		GameService gameServ, TokenService tokenServ,
-    		CardService cardServ, PlayerCardService playerCardServ,
+    		CardService cardServ, PlayerCardRepository playerCardRepo,
     		NobleService nobleServ) {
         this.playerRepo = playerRepo;
         this.gameServ = gameServ;
         this.tokenServ = tokenServ;
         this.cardServ = cardServ;
-        this.playerCardServ = playerCardServ;
+        this.playerCardRepo = playerCardRepo;
         this.nobleServ = nobleServ;
     }
     
@@ -60,6 +61,15 @@ public class PlayerService {
         Optional<Player> optionalPlayer = playerRepo.findById(id);
         if(optionalPlayer.isPresent()) {
             return optionalPlayer.get();
+        } else {
+            return null;
+        }
+    }
+    
+    public PlayerCard findPC(Card card, Player player) {
+        Optional<PlayerCard> optionalPlayerCard = playerCardRepo.findByCardAndPlayer(card, player);
+        if(optionalPlayerCard.isPresent()) {
+            return optionalPlayerCard.get();
         } else {
             return null;
         }
@@ -113,9 +123,9 @@ public class PlayerService {
     	}
     	// update happens before pCServ finds?
     	// updated(thisPlayer);
-    	PlayerCard pC = playerCardServ.find(card, thisPlayer);
+    	PlayerCard pC = findPC(card, thisPlayer);
     	pC.setOwned(true);
-    	playerCardServ.update(pC);
+    	playerCardRepo.save(pC);
 		gameServ.update(thisGame);
 		return thisGame;
     }
@@ -133,9 +143,9 @@ public class PlayerService {
     	}
     	cards.add(card);
     	update(thisPlayer);
-    	PlayerCard pC = playerCardServ.find(card, thisPlayer);
+    	PlayerCard pC = findPC(card, thisPlayer);
     	pC.setOwned(false);
-    	playerCardServ.update(pC);
+    	playerCardRepo.save(pC);
 		gameServ.update(thisGame);
 		return thisGame;
     }

@@ -61,7 +61,10 @@ public class Token {
     
 	public Token() {
 	}
-
+	
+	public Token(String name) {
+		this.name = name;
+	}
 
 	public Token(String name, List<Card> cardvalues, List<Card> cards, List<Noble> nobles, List<Game> games,
 			List<Player> players) {

@@ -48,6 +48,10 @@ public class Noble {
     private List<Token> tokens;
     
     public Noble() {}
+    
+    public Noble(Integer score) {
+    	this.score = score;
+    }
 
 	public Long getId() {
 		return id;

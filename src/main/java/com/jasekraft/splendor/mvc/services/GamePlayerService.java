@@ -48,6 +48,14 @@ public class GamePlayerService {
 	            return null;
 	        }
 	    }
+	    public GamePlayer find(Game game, Player player) {
+	        Optional<GamePlayer> optionalGamePlayer = gamePlayerRepo.findByGameAndPlayer(game, player);
+	        if(optionalGamePlayer.isPresent()) {
+	            return optionalGamePlayer.get();
+	        } else {
+	            return null;
+	        }
+	    }
 
 	    public void delete(long id) {
 	    	gamePlayerRepo.deleteById(id);
@@ -66,11 +74,18 @@ public class GamePlayerService {
 	    
 	    // Add relation 
 	    // This happens at start of game + also need to set turn counter to 0
-		public void addRelation(Long gameId,Long playerId) {
+		public boolean addRelation(Long gameId,Long playerId) {
 			Game thisGame = gameServ.find(gameId);
+			if(thisGame.getPlayers().size() >= 4)
+				return false;
 		    Player thisPlayer = playerServ.find(playerId);
 		    thisGame.getPlayers().add(thisPlayer);
+		    int totPlayers = thisGame.getPlayers().size();
 		    gameServ.update(thisGame);	
+		    GamePlayer newGP = find(thisGame,thisPlayer);
+		    newGP.setPosition(totPlayers);
+		    update(newGP);
+		    return true;
 		}
 		public void removeRelation(Long gameId, Long playerId) {
 			Game thisGame = gameServ.find(gameId);
