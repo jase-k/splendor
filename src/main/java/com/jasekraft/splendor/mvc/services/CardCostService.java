@@ -109,7 +109,7 @@ public class CardCostService {
 			for(int j = 0;j<5;j++) {
 				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}
@@ -124,9 +124,8 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}
@@ -141,9 +140,8 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}
