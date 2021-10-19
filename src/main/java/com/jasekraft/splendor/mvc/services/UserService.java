@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.models.LoginUser;
 import com.jasekraft.splendor.mvc.models.User;
 import com.jasekraft.splendor.mvc.repositories.UserRepository;
@@ -18,6 +20,9 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepo) {
     	this.userRepo = userRepo;
+    }
+    public List<User> all() {
+        return userRepo.findAll();
     }
     
     public User findUser(Long id) {
@@ -31,7 +36,7 @@ public class UserService {
     
     public User register(User newUser, BindingResult result) {
         if(userRepo.findByUsername(newUser.getUsername()).isPresent()) {
-            result.rejectValue("email", "Unique", "This email is already in use!");
+            result.rejectValue("username", "Unique", "This username is already in use!");
         }
         if(!newUser.getPassword().equals(newUser.getConfirm())) {
             result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
@@ -43,6 +48,12 @@ public class UserService {
             newUser.setPassword(hashed);
             return userRepo.save(newUser);
         }
+    }
+    
+    public User create(User newUser) {
+    	String hashed = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
+        newUser.setPassword(hashed);
+        return userRepo.save(newUser);
     }
     
     public User login(LoginUser newLogin, BindingResult result) {
@@ -64,4 +75,9 @@ public class UserService {
             return user;
         }
     }
+    
+    public void delete(long id) {
+    	userRepo.deleteById(id);
+    }
+    
 }

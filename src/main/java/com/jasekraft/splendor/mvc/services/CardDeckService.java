@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasekraft.splendor.mvc.models.Card;
+import com.jasekraft.splendor.mvc.models.CardCost;
 import com.jasekraft.splendor.mvc.models.CardDeck;
 import com.jasekraft.splendor.mvc.models.Deck;
 import com.jasekraft.splendor.mvc.models.Game;
@@ -87,13 +88,13 @@ public class CardDeckService {
 	
 	// Initialize all cards
 	public void init(Game game) {
-		List<Card> greenCards = cardServ.all().subList(0, 40);
+		List<Card> greenCards = shuffleCards(cardServ.all().subList(0, 40));
 		Deck deckG = new Deck("green", 0, game, greenCards);
 		deckServ.create(deckG);
-		List<Card> yellowCards = cardServ.all().subList(40, 70);
+		List<Card> yellowCards = shuffleCards(cardServ.all().subList(40, 70));
 		Deck deckR = new Deck("yellow", 0, game, yellowCards);
 		deckServ.create(deckR);
-		List<Card> blueCards = cardServ.all().subList(70, 90);
+		List<Card> blueCards = shuffleCards(cardServ.all().subList(70, 90));
 		Deck deckB = new Deck("blue", 0, game, blueCards);
 		deckServ.create(deckB);
 		List<Deck> decks = game.getDecks();
@@ -101,15 +102,10 @@ public class CardDeckService {
 		decks.add(deckR);
 		decks.add(deckB);
 		for(Deck d : decks) {
-			d.setCards(shuffleCards(d.getCards()));
 			List<Card> cards = d.getCards();
 			for(int i = 0 ; i<cards.size(); i++) {
-				Card thisCard = cardServ.find(cards.get(i).getId());
-			    d.getCards().add(thisCard);
-			    // adds relation card to deck
-			    CardDeck relation = find(d, thisCard);
-			    relation.setPosition(i);
-			    update(relation);
+				CardDeck cD = new CardDeck(i, cards.get(i), d);
+				cardDeckRepo.save(cD);
 			}
 		}
 		//gameRepo.save(game);

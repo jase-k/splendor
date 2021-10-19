@@ -23,6 +23,9 @@ import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="cards")
 public class Card {
@@ -41,6 +44,7 @@ public class Card {
 	@PositiveOrZero
 	private Integer score;
 	
+	@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="token_id")
     private Token token;
@@ -51,6 +55,7 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"), 
             inverseJoinColumns = @JoinColumn(name = "player_id")
         )
+	@JsonIgnoreProperties("cards")
 	private List<Player> players;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -59,6 +64,7 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"), 
             inverseJoinColumns = @JoinColumn(name = "deck_id")
         )
+	@JsonIgnoreProperties("cards")
 	private List<Deck> decks;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -67,6 +73,7 @@ public class Card {
 			joinColumns = @JoinColumn(name = "card_id"),
 			inverseJoinColumns = @JoinColumn(name = "token_id")
 			)
+	@JsonIgnoreProperties("cards")
 	private List<Token> tokens;
 
 	public Card() {

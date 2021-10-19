@@ -19,6 +19,9 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="decks")
 public class Deck {
@@ -37,7 +40,8 @@ public class Deck {
 	private String color;
 	
 	private Integer current_position;
-	    
+	
+	@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="game_id")
     private Game game;
@@ -48,6 +52,7 @@ public class Deck {
             joinColumns = @JoinColumn(name = "deck_id"), 
             inverseJoinColumns = @JoinColumn(name = "card_id")
         )
+    @JsonIgnoreProperties("decks")
 	private List<Card> cards;
 
 	public Deck() {

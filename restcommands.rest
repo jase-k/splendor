@@ -1,6 +1,60 @@
+# DB Initialization
 POST http://localhost:8080/dbinit
 Content-Type: application/json
 
 {
     "password":"root"
 }
+
+### All Games
+GET http://localhost:8080/games/
+
+### All Users
+GET http://localhost:8080/users/
+
+
+### Create new game
+GET http://localhost:8080/games/new
+
+### Delete game
+DELETE http://localhost:8080/games/1
+
+### Create new user
+POST http://localhost:8080/users/new
+Content-Type: application/json
+
+{
+    "username": "Daniel",
+    "password": "password",
+    "confirm": "password"
+}
+
+### Delete user
+DELETE http://localhost:8080/users/1
+
+### Player joins game
+POST http://localhost:8080/games/join
+Content-Type: application/json
+
+{
+    "user_id": 4,
+    "game_id": 1
+}
+
+### Player leaves game
+POST http://localhost:8080/games/leave
+Content-Type: application/json
+
+{
+    "player_id": 4,
+    "game_id": 2
+}
+
+### game starts
+POST http://localhost:8080/games/start
+Content-Type: application/json
+
+{
+    "game_id": 1
+}
+

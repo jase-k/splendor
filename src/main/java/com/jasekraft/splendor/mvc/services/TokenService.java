@@ -83,11 +83,11 @@ public class TokenService {
     }
     // initializes tokens for all games
     public void init() {
-    	Token tokenBla = new Token("black");
-    	Token tokenBlu = new Token("blue");
-    	Token tokenR = new Token("red");
-    	Token tokenW = new Token("white");
-    	Token tokenG = new Token("green");
+    	Token tokenBla = new Token("onyx");
+    	Token tokenBlu = new Token("sapphire");
+    	Token tokenR = new Token("ruby");
+    	Token tokenW = new Token("diamond");
+    	Token tokenG = new Token("emerald");
     	Token tokenGol = new Token("gold");
     	tokenRepo.save(tokenBla);
     	tokenRepo.save(tokenBlu);

@@ -30,9 +30,8 @@ public class CardDeck {
 	public CardDeck() {
 	}
 
-	public CardDeck(Long id, Integer position, Card card, Deck deck) {
+	public CardDeck(Integer position, Card card, Deck deck) {
 		super();
-		this.id = id;
 		this.position = position;
 		this.card = card;
 		this.deck = deck;

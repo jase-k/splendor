@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="nobles")
 public class Noble {
@@ -30,6 +32,7 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
+    @JsonIgnoreProperties("nobles")
     private List<Player> players;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -38,6 +41,7 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
+    @JsonIgnoreProperties("nobles")
     private List<Game> games;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,6 +50,7 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
+    @JsonIgnoreProperties("nobles")
     private List<Token> tokens;
     
     public Noble() {}

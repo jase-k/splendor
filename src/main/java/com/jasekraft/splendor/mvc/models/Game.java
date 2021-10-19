@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,9 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="games")
 public class Game {
@@ -39,6 +43,7 @@ public class Game {
 	@Positive
 	private Integer turn;
 	
+	@JsonManagedReference
     @OneToMany(mappedBy="game", fetch = FetchType.LAZY)
     private List<Deck> decks;
     
@@ -52,6 +57,7 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
+    @JsonIgnoreProperties("games")
     private List<Token> tokens;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -60,6 +66,7 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
+    @JsonIgnoreProperties("games")
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -68,10 +75,17 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
+    @JsonIgnoreProperties("games")
     private List<Player> players;
     
 
 	public Game() {
+		this.turn = 1;
+		this.decks = new ArrayList<>();
+		this.champion = null;
+		this.tokens =  new ArrayList<>();
+		this.nobles = new ArrayList<>();
+		this.players = new ArrayList<>();
 	}
 
 	public Game(@Positive Integer turn, List<Deck> decks, Player champion, List<Token> tokens, List<Noble> nobles) {

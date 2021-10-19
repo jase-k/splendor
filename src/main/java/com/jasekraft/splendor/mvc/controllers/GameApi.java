@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jasekraft.splendor.mvc.models.Game;
 import com.jasekraft.splendor.mvc.models.Player;
+import com.jasekraft.splendor.mvc.models.User;
 import com.jasekraft.splendor.mvc.services.CardCostService;
 import com.jasekraft.splendor.mvc.services.GamePlayerService;
 import com.jasekraft.splendor.mvc.services.GameService;
@@ -62,22 +63,56 @@ public class GameApi {
         	cardCostServ.init();
         }
     }
+    @RequestMapping("/games/")
+    public List<Game> games() {
+    	return gameServ.all();
+    }
+    @RequestMapping("/users/")
+    public List<User> users() {
+    	return userServ.all();
+    }
+    
     @RequestMapping("/games/new")
     public Game createGame() {
-    	Game g = new Game();
-    	return gameServ.create(g);
+    	return gameServ.create(new Game());
+    }
+    @RequestMapping(value="/games/{id}", method=RequestMethod.DELETE)
+    public String deleteGame(@PathVariable("id") Long id) {
+        gameServ.delete(id);
+        return "deleted";
+    }
+    
+    @RequestMapping(value="/users/new", method=RequestMethod.POST)
+    public User createUser(@RequestBody Map<String, Object> body) {
+    	return userServ.create(new User((String)body.get("username"), 
+    		(String)body.get("password"), (String)body.get("confirm")));
+    }
+    @RequestMapping(value="/users/{id}", method=RequestMethod.DELETE)
+    public String deleteUser(@PathVariable("id") Long id) {
+        userServ.delete(id);
+        return "deleted";
     }
     
     @RequestMapping(value="/games/join", method=RequestMethod.POST)
-    public Game joinGame(@RequestParam(value="user_id") Long userId, @RequestParam(value="game_id") Long gameId) {
+    public Game joinGame(@RequestBody Map<String, Object> body) {
+    	Long userId = Long.valueOf((Integer)body.get("user_id"));
+    	Long gameId = Long.valueOf((Integer)body.get("game_id"));
         Player player = playerServ.create(new Player(userServ.findUser(userId)));
         gamePlayerServ.addRelation(gameId, player.getId());
         return gameServ.find(gameId);
     }
+    @RequestMapping(value="/games/leave", method=RequestMethod.POST)
+    public Game leaveGame(@RequestBody Map<String, Object> body) {
+    	Long playerId = Long.valueOf((Integer)body.get("game_id"));
+    	Long gameId = Long.valueOf((Integer)body.get("game_id"));
+        gamePlayerServ.removeRelation(gameId, playerId);
+        playerServ.delete(playerId);
+        return gameServ.find(gameId);
+    }
     
     @RequestMapping(value="/games/start", method=RequestMethod.POST)
-    public Game startGame(@RequestParam(value="game_id") Long gameId) {
-    	Game game = gameServ.find(gameId);
+    public Game startGame(@RequestBody Map<String, Object> body) {
+    	Game game = gameServ.find(Long.valueOf((Integer)body.get("game_id")));
     	gameServ.initialize(game);
     	return game;
     }

@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,6 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="players")
 public class Player {
@@ -20,6 +24,7 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
@@ -30,6 +35,7 @@ public class Player {
         joinColumns = @JoinColumn(name = "player_id"), 
         inverseJoinColumns = @JoinColumn(name = "card_id")
     )
+	@JsonIgnoreProperties("players")
 	private List<Card> cards;
 	
     @ManyToMany(fetch = FetchType.LAZY)
@@ -38,6 +44,7 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
+    @JsonIgnoreProperties("players")
     private List<Token> tokens;
 	
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,6 +53,7 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
+    @JsonIgnoreProperties("players")
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -54,9 +62,16 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
+    @JsonIgnoreProperties("players")
     private List<Game> games;
     
-    public Player() {}
+    public Player() {
+    	this.cards = new ArrayList<>();
+    	this.games = new ArrayList<>();
+    	this.nobles = new ArrayList<>();
+    	this.tokens = new ArrayList<>();
+    }
+    
     
     public Player(User user) {
     	this.user = user;

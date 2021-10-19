@@ -18,7 +18,7 @@ public class CardCostService {
 	private final CardService cardServ;
 	
 	// Colors in their natural order.
-	private final String[] colors = {"black","blue","red","white","green"};
+	private final String[] colors = {"onyx","sapphire","ruby","diamond","emerald"};
 	// Cost of cards per set by order.
 	private final int[][] setOrder = {
 		{0,1,1,1,1}, {0,0,1,0,2}, {0,0,0,2,2}, {1,0,3,0,1}, {0,0,0,0,3},
@@ -107,9 +107,8 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}
@@ -124,9 +123,8 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}
@@ -141,9 +139,8 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				card = cardServ.find(Long.valueOf(i));
 				token = tokenServ.find(colors[(j+colorPos)%5]);
-				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
 			}

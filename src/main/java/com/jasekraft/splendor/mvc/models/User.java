@@ -19,6 +19,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="users")
@@ -47,11 +49,17 @@ public class User {
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
+	@JsonManagedReference
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Player> players;
 	
 	public User() {}
 
+	public User(String username, String password, String confirm) {
+		this.username = username;
+		this.password = password;
+		this.confirm = confirm;
+	}
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();
