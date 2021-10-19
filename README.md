@@ -104,13 +104,13 @@ CARD = {
 	"id" : 0,
 	"score" : 0, 
 	"deck_id" : 0, 
-	"token" : "ruby",
+	"token" : "diamond",
 	"cost" : {
-		"ruby" : 0, 
+		"ruby" : 3, 
 		"emerald" : 0, 
 		"sapphire" : 0, 
 		"diamond" : 0, 
-		"onyx" : 0
+		"onyx" : 3
 	}
 }
 ```
@@ -132,6 +132,28 @@ GAME = {
 					"diamond" : 0, 
 					"onyx" : 0
 				},
+	"nobles" : [
+					{ 
+						"id" : 0, 
+						"score" : 3, 
+						"cost" : {
+							"ruby" : 0, 
+							"emerald" : 0, 
+							"sapphire" : 0, 
+							"diamond" : 0, 
+							"onyx" : 0
+					},
+					{ 
+						"id" : 0, 
+						"score" : 3, 
+						"cost" : {
+							"ruby" : 0, 
+							"emerald" : 0, 
+							"sapphire" : 0, 
+							"diamond" : 0, 
+							"onyx" : 0
+					},
+				]
 	"players" : [ 
 					{
 						"id" : 0,
