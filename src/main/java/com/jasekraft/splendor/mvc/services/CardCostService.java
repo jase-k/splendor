@@ -17,7 +17,9 @@ public class CardCostService {
 	private final TokenService tokenServ;
 	private final CardService cardServ;
 	
+	// Colors in their natural order.
 	private final String[] colors = {"black","blue","red","white","green"};
+	// Cost of cards per set by order.
 	private final int[][] setOrder = {
 		{0,1,1,1,1}, {0,0,1,0,2}, {0,0,0,2,2}, {1,0,3,0,1}, {0,0,0,0,3},
 		{0,2,1,1,1}, {0,2,1,2,0}, {0,4,0,0,0}, {0,3,0,3,2}, {2,0,0,3,3},
@@ -105,57 +107,47 @@ public class CardCostService {
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				if(setOrder[position][j] != 0) {
-					token = tokenServ.find(colors[(j+colorPos)%5]);
-					card.getTokens().add(token);
-					//cardServ.update(card);
-					CardCost cost = find(card, token);
-					cost.setQuantity(setOrder[position][(j+colorPos)%5]);
-					update(cost);
-				}
+				card = cardServ.find(Long.valueOf(i));
+				token = tokenServ.find(colors[(j+colorPos)%5]);
+				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				//System.out.println(cost.getQuantity());
+				cardcostRepo.save(cost);
 			}
-			cardServ.update(card);
+			//cardServ.update(card);
 		}
-		//Red Deck (IDs 41-70)
-    	//Red deck - Loop through each token type
+		//Yellow Deck (IDs 41-70)
+    	//Yellow deck - Loop through each token type
 		for(int i = 1; i<=30; i++) {
-			card = cardServ.find(Long.valueOf(i));
+			card = cardServ.find(Long.valueOf(i+40));
 			position = (i-1)%6+8;
 			colorPos = (i-1)/6;
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				if(setOrder[position][j] != 0) {
-					token = tokenServ.find(colors[(j+colorPos)%5]);
-					card.getTokens().add(token);
-					//cardServ.update(card);
-					CardCost cost = find(card, token);
-					cost.setQuantity(setOrder[position][(j+colorPos)%5]);
-					update(cost);
-				}
+				card = cardServ.find(Long.valueOf(i));
+				token = tokenServ.find(colors[(j+colorPos)%5]);
+				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				//System.out.println(cost.getQuantity());
+				cardcostRepo.save(cost);
 			}
-			cardServ.update(card);
+			//cardServ.update(card);
 		}
 		//Blue Deck (IDs 71-90)
     	//Blue deck - Loop through each token type
 		for(int i = 1; i<=20; i++) {
-			card = cardServ.find(Long.valueOf(i));
+			card = cardServ.find(Long.valueOf(i+70));
 			position = (i-1)%4+14;
 			colorPos = (i-1)/4;
 			token = tokenServ.find(colors[colorPos]);
 			card.setToken(token);
 			for(int j = 0;j<5;j++) {
-				if(setOrder[position][j] != 0) {
-					token = tokenServ.find(colors[(j+colorPos)%5]);
-					card.getTokens().add(token);
-					//cardServ.update(card);
-					CardCost cost = find(card, token);
-					cost.setQuantity(setOrder[position][(j+colorPos)%5]);
-					update(cost);
-				}
+				card = cardServ.find(Long.valueOf(i));
+				token = tokenServ.find(colors[(j+colorPos)%5]);
+				CardCost cost = new CardCost(setOrder[position][(j+colorPos)%5], card, token);
+				//System.out.println(cost.getQuantity());
+				cardcostRepo.save(cost);
 			}
-			cardServ.update(card);
-		}
-		
+			//cardServ.update(card);
+		}	
 	}
 }

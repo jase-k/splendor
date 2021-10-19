@@ -65,21 +65,21 @@ public class CardService {
     	//Green Deck (IDs 1-40)
     	//Green deck - Loop through each token type
     	for(int i = 0; i<5; i++) {
-	    	for(int j = 0; i<7; i++) {
+	    	for(int j = 0; j<7; j++) {
 	    		card = new Card(0);
 	    		cardRepo.save(card);
 	    	}
 	    	card = new Card(1);
 	    	cardRepo.save(card);
     	}
-    	//Red Deck (IDs 41-70)
-    	//Red deck - Loop through each token type
+    	//Yellow Deck (IDs 41-70)
+    	//Yellow deck - Loop through each token type
     	for(int i = 0; i<5; i++) {
 	    	card = new Card(1);
 	    	cardRepo.save(card);
 	    	card = new Card(1);
 	    	cardRepo.save(card);
-	    	for(int j = 0; i<3; i++) {
+	    	for(int j = 0; j<3; j++) {
 	    		card = new Card(2);
 	    		cardRepo.save(card);
 	    	}
@@ -91,7 +91,7 @@ public class CardService {
     	for(int i = 0; i<5; i++) {
 	    	card = new Card(3);
 	    	cardRepo.save(card);
-	    	for(int j = 0; i<2; i++) {
+	    	for(int j = 0; j<2; j++) {
 	    		card = new Card(4);
 	    		cardRepo.save(card);
 	    	}

@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name="cards_cost")
@@ -18,7 +19,7 @@ public class CardCost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Positive
+    @PositiveOrZero
     private Integer quantity;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +31,7 @@ public class CardCost {
     private Token token;
 
 	public CardCost() {
+		this.quantity = 0;
 	}
 
 	public CardCost(@Positive Integer quantity, Card card, Token token) {

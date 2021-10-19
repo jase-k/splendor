@@ -90,8 +90,8 @@ public class CardDeckService {
 		List<Card> greenCards = cardServ.all().subList(0, 40);
 		Deck deckG = new Deck("green", 0, game, greenCards);
 		deckServ.create(deckG);
-		List<Card> redCards = cardServ.all().subList(40, 70);
-		Deck deckR = new Deck("red", 0, game, redCards);
+		List<Card> yellowCards = cardServ.all().subList(40, 70);
+		Deck deckR = new Deck("yellow", 0, game, yellowCards);
 		deckServ.create(deckR);
 		List<Card> blueCards = cardServ.all().subList(70, 90);
 		Deck deckB = new Deck("blue", 0, game, blueCards);

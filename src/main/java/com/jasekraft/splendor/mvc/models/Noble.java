@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 
 @Entity
-@Table(name="noble")
+@Table(name="nobles")
 public class Noble {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +52,10 @@ public class Noble {
     
     public Noble(Integer score) {
     	this.score = score;
+    	// Prevents null issues when accessing list after creation
+    	this.tokens = new ArrayList<Token>();
+    	this.players = new ArrayList<Player>();
+    	this.games = new ArrayList<Game>();
     }
 
 	public Long getId() {

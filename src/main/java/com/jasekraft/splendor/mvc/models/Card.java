@@ -1,8 +1,10 @@
 package com.jasekraft.splendor.mvc.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +45,7 @@ public class Card {
     @JoinColumn(name="token_id")
     private Token token;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "players_cards", 
             joinColumns = @JoinColumn(name = "card_id"), 
@@ -51,7 +53,7 @@ public class Card {
         )
 	private List<Player> players;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "decks_cards", 
             joinColumns = @JoinColumn(name = "card_id"), 
@@ -59,7 +61,7 @@ public class Card {
         )
 	private List<Deck> decks;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "cards_cost",
 			joinColumns = @JoinColumn(name = "card_id"),
@@ -68,10 +70,19 @@ public class Card {
 	private List<Token> tokens;
 
 	public Card() {
+		//Prevents null when accessing lists at creation
+		this.tokens = new ArrayList<Token>();
+		this.players = new ArrayList<Player>();
+		this.decks = new ArrayList<Deck>();
+		this.token = new Token();
 	}
 	
 	public Card(Integer score) {
 		this.score = score;
+		//Prevents null when accessing lists at creation
+		this.tokens = new ArrayList<Token>();
+		this.players = new ArrayList<Player>();
+		this.decks = new ArrayList<Deck>();
 	}
 	public Card(@Positive Integer score, Token token, List<Player> players, List<Deck> decks, List<Token> tokens) {
 		super();

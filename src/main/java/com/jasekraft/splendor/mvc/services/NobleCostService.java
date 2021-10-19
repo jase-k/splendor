@@ -1,5 +1,7 @@
 package com.jasekraft.splendor.mvc.services;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,131 +36,110 @@ public class NobleCostService {
 	public void init() {
 		//List<Token> tokens = tokenServ.all();
 		//A1 Mary Stuart 4 red 4 green
-		Noble nobleA1 = new Noble(3);
+		Noble nobleA1 = new Noble(3);	
+		nobleA1.getTokens().add(tokenServ.find("red"));
+		nobleA1.getTokens().add(tokenServ.find("red"));
+		nobleA1.getTokens().add(tokenServ.find("red"));
+		nobleA1.getTokens().add(tokenServ.find("red"));
+		nobleA1.getTokens().add(tokenServ.find("green"));
+		nobleA1.getTokens().add(tokenServ.find("green"));
+		nobleA1.getTokens().add(tokenServ.find("green"));
+		nobleA1.getTokens().add(tokenServ.find("green"));
 		nobleServ.create(nobleA1);
-		//no other way to find after insertion
-		nobleA1 = nobleServ.find(Long.valueOf(1));
-		nobleA1.getTokens().add(tokenServ.find("red"));
-		nobleA1.getTokens().add(tokenServ.find("red"));
-		nobleA1.getTokens().add(tokenServ.find("red"));
-		nobleA1.getTokens().add(tokenServ.find("red"));
-		nobleA1.getTokens().add(tokenServ.find("green"));
-		nobleA1.getTokens().add(tokenServ.find("green"));
-		nobleA1.getTokens().add(tokenServ.find("green"));
-		nobleA1.getTokens().add(tokenServ.find("green"));
-		nobleServ.update(nobleA1);
-		//A2 Charles Quint (Karl V for germans)
+		//A2 Charles Quint (Karl V for germans) 3 red 3 black 3 white
 		Noble nobleA2 = new Noble(3);
+		nobleA2.getTokens().add(tokenServ.find("red"));
+		nobleA2.getTokens().add(tokenServ.find("red"));
+		nobleA2.getTokens().add(tokenServ.find("red"));
+		nobleA2.getTokens().add(tokenServ.find("black"));
+		nobleA2.getTokens().add(tokenServ.find("black"));
+		nobleA2.getTokens().add(tokenServ.find("black"));
+		nobleA2.getTokens().add(tokenServ.find("white"));
+		nobleA2.getTokens().add(tokenServ.find("white"));
+		nobleA2.getTokens().add(tokenServ.find("white"));
 		nobleServ.create(nobleA2);
-		nobleA2 = nobleServ.find(Long.valueOf(2));
-		nobleA2.getTokens().add(tokenServ.find("red"));
-		nobleA2.getTokens().add(tokenServ.find("red"));
-		nobleA2.getTokens().add(tokenServ.find("red"));
-		nobleA2.getTokens().add(tokenServ.find("black"));
-		nobleA2.getTokens().add(tokenServ.find("black"));
-		nobleA2.getTokens().add(tokenServ.find("black"));
-		nobleA2.getTokens().add(tokenServ.find("white"));
-		nobleA2.getTokens().add(tokenServ.find("white"));
-		nobleA2.getTokens().add(tokenServ.find("white"));
-		nobleServ.update(nobleA2);
-		//A3 Macchiavelli
+		//A3 Macchiavelli 4 blue 4 white
 		Noble nobleA3 = new Noble(3);
+		nobleA3.getTokens().add(tokenServ.find("blue"));
+		nobleA3.getTokens().add(tokenServ.find("blue"));
+		nobleA3.getTokens().add(tokenServ.find("blue"));
+		nobleA3.getTokens().add(tokenServ.find("blue"));
+		nobleA3.getTokens().add(tokenServ.find("white"));
+		nobleA3.getTokens().add(tokenServ.find("white"));
+		nobleA3.getTokens().add(tokenServ.find("white"));
+		nobleA3.getTokens().add(tokenServ.find("white"));
 		nobleServ.create(nobleA3);
-		nobleA3 = nobleServ.find(Long.valueOf(3));
-		nobleA3.getTokens().add(tokenServ.find("blue"));
-		nobleA3.getTokens().add(tokenServ.find("blue"));
-		nobleA3.getTokens().add(tokenServ.find("blue"));
-		nobleA3.getTokens().add(tokenServ.find("blue"));
-		nobleA3.getTokens().add(tokenServ.find("white"));
-		nobleA3.getTokens().add(tokenServ.find("white"));
-		nobleA3.getTokens().add(tokenServ.find("white"));
-		nobleA3.getTokens().add(tokenServ.find("white"));
-		nobleServ.update(nobleA3);
-		//B1 Isabel of Castille
+		//B1 Isabel of Castille 4 black 4 white
 		Noble nobleA4 = new Noble(3);
+		nobleA4.getTokens().add(tokenServ.find("black"));
+		nobleA4.getTokens().add(tokenServ.find("black"));
+		nobleA4.getTokens().add(tokenServ.find("black"));
+		nobleA4.getTokens().add(tokenServ.find("black"));
+		nobleA4.getTokens().add(tokenServ.find("white"));
+		nobleA4.getTokens().add(tokenServ.find("white"));
+		nobleA4.getTokens().add(tokenServ.find("white"));
+		nobleA4.getTokens().add(tokenServ.find("white"));
 		nobleServ.create(nobleA4);
-		nobleA4 = nobleServ.find(Long.valueOf(4));
-		nobleA4.getTokens().add(tokenServ.find("black"));
-		nobleA4.getTokens().add(tokenServ.find("black"));
-		nobleA4.getTokens().add(tokenServ.find("black"));
-		nobleA4.getTokens().add(tokenServ.find("black"));
-		nobleA4.getTokens().add(tokenServ.find("white"));
-		nobleA4.getTokens().add(tokenServ.find("white"));
-		nobleA4.getTokens().add(tokenServ.find("white"));
-		nobleA4.getTokens().add(tokenServ.find("white"));
-		nobleServ.update(nobleA4);
-		//B2 Suleiman the Magnificent
+		//B2 Suleiman the Magnificent 4 blue 4 green
 		Noble nobleA5 = new Noble(3);
+		nobleA5.getTokens().add(tokenServ.find("blue"));
+		nobleA5.getTokens().add(tokenServ.find("blue"));
+		nobleA5.getTokens().add(tokenServ.find("blue"));
+		nobleA5.getTokens().add(tokenServ.find("blue"));
+		nobleA5.getTokens().add(tokenServ.find("green"));
+		nobleA5.getTokens().add(tokenServ.find("green"));
+		nobleA5.getTokens().add(tokenServ.find("green"));
+		nobleA5.getTokens().add(tokenServ.find("green"));
 		nobleServ.create(nobleA5);
-		nobleA5 = nobleServ.find(Long.valueOf(5));
-		nobleA5.getTokens().add(tokenServ.find("blue"));
-		nobleA5.getTokens().add(tokenServ.find("blue"));
-		nobleA5.getTokens().add(tokenServ.find("blue"));
-		nobleA5.getTokens().add(tokenServ.find("blue"));
-		nobleA5.getTokens().add(tokenServ.find("green"));
-		nobleA5.getTokens().add(tokenServ.find("green"));
-		nobleA5.getTokens().add(tokenServ.find("green"));
-		nobleA5.getTokens().add(tokenServ.find("green"));
-		nobleServ.update(nobleA5);
-		//B3 Catherine of Medicis
+		//B3 Catherine of Medicis 3 red 3 green 3 blue
 		Noble nobleA6 = new Noble(3);
+		nobleA6.getTokens().add(tokenServ.find("red"));
+		nobleA6.getTokens().add(tokenServ.find("red"));
+		nobleA6.getTokens().add(tokenServ.find("red"));
+		nobleA6.getTokens().add(tokenServ.find("green"));
+		nobleA6.getTokens().add(tokenServ.find("green"));
+		nobleA6.getTokens().add(tokenServ.find("green"));
+		nobleA6.getTokens().add(tokenServ.find("blue"));
+		nobleA6.getTokens().add(tokenServ.find("blue"));
+		nobleA6.getTokens().add(tokenServ.find("blue"));
 		nobleServ.create(nobleA6);
-		nobleA6 = nobleServ.find(Long.valueOf(6));
-		nobleA6.getTokens().add(tokenServ.find("red"));
-		nobleA6.getTokens().add(tokenServ.find("red"));
-		nobleA6.getTokens().add(tokenServ.find("red"));
-		nobleA6.getTokens().add(tokenServ.find("green"));
-		nobleA6.getTokens().add(tokenServ.find("green"));
-		nobleA6.getTokens().add(tokenServ.find("green"));
-		nobleA6.getTokens().add(tokenServ.find("blue"));
-		nobleA6.getTokens().add(tokenServ.find("blue"));
-		nobleA6.getTokens().add(tokenServ.find("blue"));
-		nobleServ.update(nobleA6);
-		//C1 Anne of Brittany
+		//C1 Anne of Brittany 3 white 3 green 3 blue
 		Noble nobleA7 = new Noble(3);
+		nobleA7.getTokens().add(tokenServ.find("white"));
+		nobleA7.getTokens().add(tokenServ.find("white"));
+		nobleA7.getTokens().add(tokenServ.find("white"));
+		nobleA7.getTokens().add(tokenServ.find("green"));
+		nobleA7.getTokens().add(tokenServ.find("green"));
+		nobleA7.getTokens().add(tokenServ.find("green"));
+		nobleA7.getTokens().add(tokenServ.find("blue"));
+		nobleA7.getTokens().add(tokenServ.find("blue"));
+		nobleA7.getTokens().add(tokenServ.find("blue"));
 		nobleServ.create(nobleA7);
-		nobleA7 = nobleServ.find(Long.valueOf(7));
-		nobleA7.getTokens().add(tokenServ.find("white"));
-		nobleA7.getTokens().add(tokenServ.find("white"));
-		nobleA7.getTokens().add(tokenServ.find("white"));
-		nobleA7.getTokens().add(tokenServ.find("green"));
-		nobleA7.getTokens().add(tokenServ.find("green"));
-		nobleA7.getTokens().add(tokenServ.find("green"));
-		nobleA7.getTokens().add(tokenServ.find("blue"));
-		nobleA7.getTokens().add(tokenServ.find("blue"));
-		nobleA7.getTokens().add(tokenServ.find("blue"));
-		nobleServ.update(nobleA7);
-		//C2 Henri VIII
+		//C2 Henri VIII 4 black 4 red
 		Noble nobleA8 = new Noble(3);
+		nobleA8.getTokens().add(tokenServ.find("black"));
+		nobleA8.getTokens().add(tokenServ.find("black"));
+		nobleA8.getTokens().add(tokenServ.find("black"));
+		nobleA8.getTokens().add(tokenServ.find("black"));
+		nobleA8.getTokens().add(tokenServ.find("red"));
+		nobleA8.getTokens().add(tokenServ.find("red"));
+		nobleA8.getTokens().add(tokenServ.find("red"));
+		nobleA8.getTokens().add(tokenServ.find("red"));
 		nobleServ.create(nobleA8);
-		nobleA8 = nobleServ.find(Long.valueOf(8));
-		nobleA8.getTokens().add(tokenServ.find("black"));
-		nobleA8.getTokens().add(tokenServ.find("black"));
-		nobleA8.getTokens().add(tokenServ.find("black"));
-		nobleA8.getTokens().add(tokenServ.find("black"));
-		nobleA8.getTokens().add(tokenServ.find("red"));
-		nobleA8.getTokens().add(tokenServ.find("red"));
-		nobleA8.getTokens().add(tokenServ.find("red"));
-		nobleA8.getTokens().add(tokenServ.find("red"));
-		nobleServ.update(nobleA8);
-		//D1 Elisabeth of Austria
+		//D1 Elisabeth of Austria 3 blue 3 black 3 white
 		Noble nobleA9 = new Noble(3);
+		nobleA9.getTokens().add(tokenServ.find("blue"));
+		nobleA9.getTokens().add(tokenServ.find("blue"));
+		nobleA9.getTokens().add(tokenServ.find("blue"));
+		nobleA9.getTokens().add(tokenServ.find("black"));
+		nobleA9.getTokens().add(tokenServ.find("black"));
+		nobleA9.getTokens().add(tokenServ.find("black"));
+		nobleA9.getTokens().add(tokenServ.find("white"));
+		nobleA9.getTokens().add(tokenServ.find("white"));
+		nobleA9.getTokens().add(tokenServ.find("white"));
 		nobleServ.create(nobleA9);
-		nobleA9 = nobleServ.find(Long.valueOf(9));
-		nobleA9.getTokens().add(tokenServ.find("blue"));
-		nobleA9.getTokens().add(tokenServ.find("blue"));
-		nobleA9.getTokens().add(tokenServ.find("blue"));
-		nobleA9.getTokens().add(tokenServ.find("black"));
-		nobleA9.getTokens().add(tokenServ.find("black"));
-		nobleA9.getTokens().add(tokenServ.find("black"));
-		nobleA9.getTokens().add(tokenServ.find("white"));
-		nobleA9.getTokens().add(tokenServ.find("white"));
-		nobleA9.getTokens().add(tokenServ.find("white"));
-		nobleServ.update(nobleA9);
-		//D2 Francis I of France
-		Noble nobleA10 = new Noble(3);
-		nobleServ.create(nobleA10);
-		nobleA10 = nobleServ.find(Long.valueOf(10));
+		//D2 Francis I of France 3 red 3 black 3 green
+		Noble nobleA10 = new Noble(3);	
 		nobleA10.getTokens().add(tokenServ.find("red"));
 		nobleA10.getTokens().add(tokenServ.find("red"));
 		nobleA10.getTokens().add(tokenServ.find("red"));
@@ -168,6 +149,6 @@ public class NobleCostService {
 		nobleA10.getTokens().add(tokenServ.find("green"));
 		nobleA10.getTokens().add(tokenServ.find("green"));
 		nobleA10.getTokens().add(tokenServ.find("green"));
-		nobleServ.update(nobleA10);	
+		nobleServ.create(nobleA10);	
 	}
 }
