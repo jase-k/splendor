@@ -2,6 +2,7 @@ package com.jasekraft.splendor.mvc.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,9 +20,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -33,14 +36,16 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @JsonIgnore
     @Column(updatable=false)
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date createdAt;
 	
+    @JsonIgnore
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
-	@Positive
+	@PositiveOrZero
 	private Integer turn;
 	
 	@JsonManagedReference
@@ -58,8 +63,12 @@ public class Game {
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
     //@JsonIgnoreProperties("games")
-    @JsonManagedReference
+    //@JsonManagedReference
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private List<Token> tokens;
+    
+	private HashMap <String, Integer> tokenPool;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -67,7 +76,9 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
-    @JsonIgnoreProperties("games")
+    //@JsonIgnoreProperties("games")
+    //@JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -76,17 +87,21 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
-    @JsonIgnoreProperties("games")
+    //@JsonIgnoreProperties("games")
+    //@JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Player> players;
     
 
 	public Game() {
-		this.turn = 1;
+		this.turn = 0;
 		this.decks = new ArrayList<>();
 		this.champion = null;
 		this.tokens =  new ArrayList<>();
 		this.nobles = new ArrayList<>();
 		this.players = new ArrayList<>();
+		this.tokenPool = new HashMap<String, Integer>();
+		
 	}
 
 	public Game(@Positive Integer turn, List<Deck> decks, Player champion, List<Token> tokens, List<Noble> nobles) {
@@ -181,8 +196,13 @@ public class Game {
 		this.players = players;
 	}
 	
+    public HashMap<String, Integer> getTokenPool() {
+		return tokenPool;
+	}
+
+	public void setTokenPool(HashMap<String, Integer> tokenPool) {
+		this.tokenPool = tokenPool;
+	}
 	
-	
-    
     
 }

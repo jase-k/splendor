@@ -2,6 +2,7 @@ package com.jasekraft.splendor.mvc.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,9 +24,8 @@ import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="cards")
@@ -35,20 +35,28 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @JsonIgnore
     @Column(updatable=false)
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date createdAt;
 	
+    @JsonIgnore
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
 	@PositiveOrZero
 	private Integer score;
 	
-	@JsonManagedReference
+	//@JsonManagedReference
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="token_id")
     private Token token;
+	
+	private String tokenName;
+	
+	private HashMap <String, Integer> tokenCost;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -56,7 +64,10 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"), 
             inverseJoinColumns = @JoinColumn(name = "player_id")
         )
-	@JsonIgnoreProperties("cards")
+	
+	//@JsonIgnoreProperties("cards")
+	//@JsonBackReference
+	@JsonIgnore
 	private List<Player> players;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -66,7 +77,8 @@ public class Card {
             inverseJoinColumns = @JoinColumn(name = "deck_id")
         )
 	//@JsonIgnoreProperties("cards")
-	@JsonBackReference
+	//@JsonBackReference
+	@JsonIgnore
 	private List<Deck> decks;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -76,7 +88,9 @@ public class Card {
 			inverseJoinColumns = @JoinColumn(name = "token_id")
 			)
 	//@JsonIgnoreProperties("cards")
-	@JsonManagedReference
+	//@JsonManagedReference
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnore
 	private List<Token> tokens;
 
 	public Card() {
@@ -85,6 +99,7 @@ public class Card {
 		this.players = new ArrayList<Player>();
 		this.decks = new ArrayList<Deck>();
 		this.token = new Token();
+		
 	}
 	
 	public Card(Integer score) {
@@ -93,6 +108,7 @@ public class Card {
 		this.tokens = new ArrayList<Token>();
 		this.players = new ArrayList<Player>();
 		this.decks = new ArrayList<Deck>();
+		this.tokenCost = new HashMap<String,Integer>();
 	}
 	public Card(@Positive Integer score, Token token, List<Player> players, List<Deck> decks, List<Token> tokens) {
 		super();
@@ -152,6 +168,8 @@ public class Card {
 
 	public void setToken(Token token) {
 		this.token = token;
+		if(token != null)
+			this.tokenName = token.getName();
 	}
 
 	public List<Player> getPlayers() {
@@ -177,8 +195,21 @@ public class Card {
 	public void setTokens(List<Token> tokens) {
 		this.tokens = tokens;
 	}
-	
-	
-	
+
+	public String getTokenName() {
+		return tokenName;
+	}
+
+	public void setTokenName(String tokenName) {
+		this.tokenName = tokenName;
+	}
+
+	public HashMap<String, Integer> getTokenCost() {
+		return tokenCost;
+	}
+
+	public void setTokenCost(HashMap<String, Integer> tokenCost) {
+		this.tokenCost = tokenCost;
+	}
 	
 }

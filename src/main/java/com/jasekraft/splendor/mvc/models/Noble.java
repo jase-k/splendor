@@ -1,6 +1,7 @@
 package com.jasekraft.splendor.mvc.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,8 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="nobles")
@@ -33,7 +34,9 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
-    @JsonIgnoreProperties("nobles")
+    //@JsonIgnoreProperties("nobles")
+    //@JsonBackReference
+    @JsonIgnore
     private List<Player> players;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -42,7 +45,9 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
-    @JsonIgnoreProperties("nobles")
+    //@JsonIgnoreProperties("nobles")
+    //@JsonBackReference
+    @JsonIgnore
     private List<Game> games;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -52,9 +57,13 @@ public class Noble {
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
     //@JsonIgnoreProperties("nobles")
-    @JsonManagedReference
+    //@JsonManagedReference
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private List<Token> tokens;
     
+	private HashMap <String, Integer> tokenCost;
+	
     public Noble() {}
     
     public Noble(Integer score) {
@@ -63,6 +72,7 @@ public class Noble {
     	this.tokens = new ArrayList<Token>();
     	this.players = new ArrayList<Player>();
     	this.games = new ArrayList<Game>();
+    	this.tokenCost = new HashMap<String, Integer>();
     }
 
 	public Long getId() {
@@ -103,5 +113,13 @@ public class Noble {
 
 	public void setTokens(List<Token> tokens) {
 		this.tokens = tokens;
+	}
+
+	public HashMap<String, Integer> getTokenCost() {
+		return tokenCost;
+	}
+
+	public void setTokenCost(HashMap<String, Integer> tokenCost) {
+		this.tokenCost = tokenCost;
 	}
 }

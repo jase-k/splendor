@@ -101,13 +101,14 @@ public class CardDeckService {
 		decks.add(deckG);
 		decks.add(deckR);
 		decks.add(deckB);
+		/*
 		for(Deck d : decks) {
 			List<Card> cards = d.getCards();
 			for(int i = 0 ; i<cards.size(); i++) {
 				CardDeck cD = new CardDeck(i, cards.get(i), d);
 				cardDeckRepo.save(cD);
 			}
-		}
+		}*/
 		//gameRepo.save(game);
 	}
 	

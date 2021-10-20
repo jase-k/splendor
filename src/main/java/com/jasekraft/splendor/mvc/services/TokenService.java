@@ -69,16 +69,20 @@ public class TokenService {
     public void init(Game game, int totalTokens) {
     	List<Token> tokens = all();
     	for(Token t : tokens) {
-			if(t.getName().equals("gold"))
+			if(t.getName().equals("gold")) {
 				for(int i = 0; i<goldTokens; i++) {
 					Token thisToken = find(t.getId());
 					game.getTokens().add(thisToken);
 				}
-			else
+				game.getTokenPool().put(t.getName(), goldTokens);
+			}
+			else {
 				for(int i = 0; i<totalTokens; i++) {
 					Token thisToken = find(t.getId());
 					game.getTokens().add(thisToken);
-				}			
+				}	
+				game.getTokenPool().put(t.getName(), totalTokens);
+			}
 		}
     }
     // initializes tokens for all games

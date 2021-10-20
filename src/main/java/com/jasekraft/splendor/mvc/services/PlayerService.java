@@ -91,12 +91,12 @@ public class PlayerService {
     }
     
     // add Tokens
-	public Game addTokens(Long gameId, Long playerId, Long[] tokenIds) {
+	public Game addTokens(Long gameId, Long playerId, Long[] tokens) {
 		Player thisPlayer = find(playerId);
 		Game thisGame = gameServ.find(playerId);
 		List<Token> playerTokens = thisPlayer.getTokens();
 		List<Token> gameTokens = thisGame.getTokens();
-		for(Long tokenId : tokenIds) {
+		for(Long tokenId : tokens) {
 			playerTokens.add(tokenServ.find(tokenId));	
 			gameTokens.remove(tokenServ.find(tokenId));
 		}
@@ -107,46 +107,50 @@ public class PlayerService {
 	
 	// add card 
     public Game addCard(Long gameId, Long playerId, Long cardId) {
+    	Game thisGame = gameServ.find(gameId);
     	Player thisPlayer = find(playerId);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Card> cards = thisPlayer.getCards();
-    	Game thisGame = gameServ.find(gameId);
     	if(!cards.contains(card)) {
 	    	List<Deck> decks = thisGame.getDecks();
 	    	for(Deck deck : decks) {
-	    		List<Card> deckCards = deck.getCards();
-	    		if(deckCards.contains(card)) 
-	    			deckCards.remove(card);
+	    		//List<Card> deckCards = deck.getCards();
+	    		if(deck.getCards().contains(card)) 
+	    			deck.getCards().remove(card);
 	    	}
-	    	cards.add(card);
-	    	update(thisPlayer);
+	    	//cards.add(card);
+	    	//update(thisPlayer);
     	}
     	// update happens before pCServ finds?
     	// updated(thisPlayer);
-    	PlayerCard pC = findPC(card, thisPlayer);
-    	pC.setOwned(true);
+    	PlayerCard pC = new PlayerCard(true, card, thisPlayer);
     	playerCardRepo.save(pC);
-		gameServ.update(thisGame);
+    	thisGame.setTurn(thisGame.getTurn()+1);
+		//gameServ.update(thisGame);
 		return thisGame;
     }
     // reserve card
     public Game reserveCard(Long gameId, Long playerId, Long cardId) {
     	Game thisGame = gameServ.find(gameId);
     	Player thisPlayer = find(playerId);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Deck> decks = thisGame.getDecks();
     	List<Card> cards = thisPlayer.getCards();
     	for(Deck deck : decks) {
-    		List<Card> deckCards = deck.getCards();
-    		if(deckCards.contains(card)) 
-    			deckCards.remove(card);
+    		//List<Card> deckCards = deck.getCards();
+    		if(deck.getCards().contains(card)) 
+    			deck.getCards().remove(card);
     	}
-    	cards.add(card);
-    	update(thisPlayer);
-    	PlayerCard pC = findPC(card, thisPlayer);
-    	pC.setOwned(false);
+    	//cards.add(card);
+    	//update(thisPlayer);
+    	PlayerCard pC = new PlayerCard(false, card, thisPlayer);
+    	//pC.setOwned(false);
     	playerCardRepo.save(pC);
-		gameServ.update(thisGame);
+		//gameServ.update(thisGame);
 		return thisGame;
     }
     

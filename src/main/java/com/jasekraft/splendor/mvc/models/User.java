@@ -19,7 +19,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
@@ -32,24 +33,29 @@ public class User {
 	@NotEmpty(message="Username is required!")
 	@Size(min=3, max=30, message="Username must be between 3 and 30 characters")
 	private String username;
-
+	
+	@JsonIgnore
 	@NotEmpty(message="Password is required!")
 	@Size(min=8, max=128, message="Password must be between 8 and 128 characters")
 	private String password;
 	
+	@JsonIgnore
 	@Transient
 	@NotEmpty(message="Confirm Password is required!")
 	@Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
 	private String confirm;
 	
+	@JsonIgnore
 	@Column(updatable=false)
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date createdAt;
 	
+	@JsonIgnore
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
-	@JsonManagedReference
+	//@JsonManagedReference
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"})
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Player> players;
 	
