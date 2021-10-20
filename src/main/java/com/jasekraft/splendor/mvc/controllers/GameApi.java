@@ -85,10 +85,10 @@ public class GameApi {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/users/new", method=RequestMethod.POST)
     public User createUser(@RequestBody Map<String, Object> body) {
-    	System.out.printf("You got a hit %s", body);
     	return userServ.create(new User((String)body.get("username"), 
     		(String)body.get("password"), (String)body.get("confirm")));
     }
+    
     @RequestMapping(value="/users/{id}", method=RequestMethod.DELETE)
     public String deleteUser(@PathVariable("id") Long id) {
         userServ.delete(id);
