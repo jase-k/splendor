@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="nobles")
@@ -50,7 +51,8 @@ public class Noble {
     		joinColumns = @JoinColumn(name = "noble_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
-    @JsonIgnoreProperties("nobles")
+    //@JsonIgnoreProperties("nobles")
+    @JsonManagedReference
     private List<Token> tokens;
     
     public Noble() {}

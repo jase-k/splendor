@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="players")
@@ -44,7 +45,8 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
-    @JsonIgnoreProperties("players")
+    //@JsonIgnoreProperties("players")
+    @JsonManagedReference
     private List<Token> tokens;
 	
     @ManyToMany(fetch = FetchType.LAZY)
@@ -62,7 +64,7 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
-    @JsonIgnoreProperties("players")
+    //@JsonIgnoreProperties("players")
     private List<Game> games;
     
     public Player() {

@@ -13,8 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name="tokens")
@@ -26,7 +25,7 @@ public class Token {
     
     private String name; 
     
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy="token", fetch = FetchType.LAZY)
     private List<Card> cardvalues;
     
@@ -36,7 +35,8 @@ public class Token {
 			joinColumns = @JoinColumn(name = "token_id"),
 			inverseJoinColumns = @JoinColumn(name = "card_id")
     		)
-    @JsonIgnoreProperties("token")
+    //@JsonIgnoreProperties("tokens")
+    @JsonBackReference
     private List<Card> cards; 
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,7 +45,8 @@ public class Token {
     		joinColumns = @JoinColumn(name = "token_id"),
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
-    @JsonIgnoreProperties("token")
+    //@JsonIgnoreProperties("tokens")
+    @JsonBackReference
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -54,7 +55,8 @@ public class Token {
     		joinColumns = @JoinColumn(name = "token_id"),
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
-    @JsonIgnoreProperties("token")
+    //@JsonIgnoreProperties("tokens")
+    @JsonBackReference
     private List<Game> games; 
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -63,7 +65,8 @@ public class Token {
     		joinColumns = @JoinColumn(name = "token_id"),
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
-    @JsonIgnoreProperties("token")
+    //@JsonIgnoreProperties("tokens")
+    @JsonBackReference
     private List<Player> players;
 
     

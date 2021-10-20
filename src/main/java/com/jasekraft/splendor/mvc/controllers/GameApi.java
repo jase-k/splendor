@@ -103,7 +103,7 @@ public class GameApi {
     }
     @RequestMapping(value="/games/leave", method=RequestMethod.POST)
     public Game leaveGame(@RequestBody Map<String, Object> body) {
-    	Long playerId = Long.valueOf((Integer)body.get("game_id"));
+    	Long playerId = Long.valueOf((Integer)body.get("player_id"));
     	Long gameId = Long.valueOf((Integer)body.get("game_id"));
         gamePlayerServ.removeRelation(gameId, playerId);
         playerServ.delete(playerId);

@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="decks")
@@ -52,7 +52,8 @@ public class Deck {
             joinColumns = @JoinColumn(name = "deck_id"), 
             inverseJoinColumns = @JoinColumn(name = "card_id")
         )
-    @JsonIgnoreProperties("decks")
+    //@JsonIgnoreProperties("decks")
+    @JsonManagedReference
 	private List<Card> cards;
 
 	public Deck() {

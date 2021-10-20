@@ -25,6 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="cards")
@@ -44,7 +45,7 @@ public class Card {
 	@PositiveOrZero
 	private Integer score;
 	
-	@JsonBackReference
+	@JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="token_id")
     private Token token;
@@ -64,7 +65,8 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"), 
             inverseJoinColumns = @JoinColumn(name = "deck_id")
         )
-	@JsonIgnoreProperties("cards")
+	//@JsonIgnoreProperties("cards")
+	@JsonBackReference
 	private List<Deck> decks;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -73,7 +75,8 @@ public class Card {
 			joinColumns = @JoinColumn(name = "card_id"),
 			inverseJoinColumns = @JoinColumn(name = "token_id")
 			)
-	@JsonIgnoreProperties("cards")
+	//@JsonIgnoreProperties("cards")
+	@JsonManagedReference
 	private List<Token> tokens;
 
 	public Card() {

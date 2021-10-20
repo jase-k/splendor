@@ -57,7 +57,8 @@ public class Game {
     		joinColumns = @JoinColumn(name = "game_id"),
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
-    @JsonIgnoreProperties("games")
+    //@JsonIgnoreProperties("games")
+    @JsonManagedReference
     private List<Token> tokens;
     
     @ManyToMany(fetch = FetchType.LAZY)
