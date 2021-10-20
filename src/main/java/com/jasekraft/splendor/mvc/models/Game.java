@@ -103,6 +103,16 @@ public class Game {
 		this.tokenPool = new HashMap<String, Integer>();
 		
 	}
+	public Game(Player player) {
+		this.turn = 0;
+		this.decks = new ArrayList<>();
+		this.champion = null;
+		this.tokens =  new ArrayList<>();
+		this.nobles = new ArrayList<>();
+		this.players = new ArrayList<>();
+		this.tokenPool = new HashMap<String, Integer>();
+		this.players.add(player);
+	}
 
 	public Game(@Positive Integer turn, List<Deck> decks, Player champion, List<Token> tokens, List<Noble> nobles) {
 		super();

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,8 +82,10 @@ public class GameApi {
     
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games/new")
-    public Game createGame() {
-    	return gameServ.create(new Game());
+    public Game createGame(@RequestParam("user_id")Long user_id) {
+    	Player player = new Player(userServ.findUser(user_id));
+    	playerServ.create(player);
+    	return gameServ.create(new Game(player));
     }
     
     @CrossOrigin(origins = "http://localhost:3000")
