@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -82,8 +82,10 @@ public class GameApi {
         return "deleted";
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/users/new", method=RequestMethod.POST)
     public User createUser(@RequestBody Map<String, Object> body) {
+    	System.out.printf("You got a hit %s", body);
     	return userServ.create(new User((String)body.get("username"), 
     		(String)body.get("password"), (String)body.get("confirm")));
     }
