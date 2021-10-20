@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -30,10 +32,12 @@ public class Deck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @JsonIgnore
     @Column(updatable=false)
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date createdAt;
 	
+    @JsonIgnore
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date updatedAt;
 	
@@ -53,7 +57,8 @@ public class Deck {
             inverseJoinColumns = @JoinColumn(name = "card_id")
         )
     //@JsonIgnoreProperties("decks")
-    @JsonManagedReference
+    //@JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private List<Card> cards;
 
 	public Deck() {

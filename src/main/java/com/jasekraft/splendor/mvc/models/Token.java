@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="tokens")
@@ -26,8 +28,9 @@ public class Token {
     private String name; 
     
     @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy="token", fetch = FetchType.LAZY)
-    private List<Card> cardvalues;
+    private List<Card> card;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -36,7 +39,8 @@ public class Token {
 			inverseJoinColumns = @JoinColumn(name = "card_id")
     		)
     //@JsonIgnoreProperties("tokens")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIgnore
     private List<Card> cards; 
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,7 +50,8 @@ public class Token {
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
     //@JsonIgnoreProperties("tokens")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIgnore
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -56,7 +61,8 @@ public class Token {
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
     //@JsonIgnoreProperties("tokens")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIgnore
     private List<Game> games; 
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -66,7 +72,8 @@ public class Token {
     		inverseJoinColumns = @JoinColumn(name = "player_id")
     		)
     //@JsonIgnoreProperties("tokens")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIgnore
     private List<Player> players;
 
     
@@ -81,7 +88,7 @@ public class Token {
 			List<Player> players) {
 		super();
 		this.name = name;
-		this.cardvalues = cardvalues;
+		this.card = cardvalues;
 		this.cards = cards;
 		this.nobles = nobles;
 		this.games = games;
@@ -109,13 +116,13 @@ public class Token {
 	}
 
 
-	public List<Card> getCardvalues() {
-		return cardvalues;
+	public List<Card> getCard() {
+		return card;
 	}
 
 
-	public void setCardvalues(List<Card> cardvalues) {
-		this.cardvalues = cardvalues;
+	public void setCard(List<Card> cardvalues) {
+		this.card = cardvalues;
 	}
 
 

@@ -1,6 +1,7 @@
 package com.jasekraft.splendor.mvc.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,9 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="players")
@@ -25,7 +25,8 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@JsonBackReference
+	//@JsonBackReference
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","players"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
@@ -36,8 +37,12 @@ public class Player {
         joinColumns = @JoinColumn(name = "player_id"), 
         inverseJoinColumns = @JoinColumn(name = "card_id")
     )
-	@JsonIgnoreProperties("players")
+	//@JsonIgnoreProperties("players")
+	//@JsonManagedReference
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private List<Card> cards;
+	
+	private int turn;
 	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -46,8 +51,12 @@ public class Player {
     		inverseJoinColumns = @JoinColumn(name = "token_id")
     		)
     //@JsonIgnoreProperties("players")
-    @JsonManagedReference
+    //@JsonManagedReference
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private List<Token> tokens;
+    
+    private HashMap <String, Integer> tokenPool;
 	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -55,7 +64,9 @@ public class Player {
     		joinColumns = @JoinColumn(name = "player_id"),
     		inverseJoinColumns = @JoinColumn(name = "noble_id")
     		)
-    @JsonIgnoreProperties("players")
+    //@JsonIgnoreProperties("players")
+    //@JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Noble> nobles;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -65,6 +76,8 @@ public class Player {
     		inverseJoinColumns = @JoinColumn(name = "game_id")
     		)
     //@JsonIgnoreProperties("players")
+    //@JsonBackReference
+    @JsonIgnore
     private List<Game> games;
     
     public Player() {
@@ -72,6 +85,7 @@ public class Player {
     	this.games = new ArrayList<>();
     	this.nobles = new ArrayList<>();
     	this.tokens = new ArrayList<>();
+    	this.tokenPool = new HashMap<String, Integer>();
     }
     
     
@@ -125,6 +139,26 @@ public class Player {
 
 	public void setGames(List<Game> games) {
 		this.games = games;
+	}
+
+
+	public HashMap<String, Integer> getTokenPool() {
+		return tokenPool;
+	}
+
+
+	public void setTokenPool(HashMap<String, Integer> tokenPool) {
+		this.tokenPool = tokenPool;
+	}
+
+
+	public int getTurn() {
+		return turn;
+	}
+
+
+	public void setTurn(int turn) {
+		this.turn = turn;
 	}
     
     

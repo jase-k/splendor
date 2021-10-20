@@ -111,6 +111,7 @@ public class CardCostService {
 				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
+				card.getTokenCost().put(colors[(j+colorPos)%5], setOrder[position][j]);
 			}
 			//cardServ.update(card);
 		}
@@ -127,6 +128,7 @@ public class CardCostService {
 				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
+				card.getTokenCost().put(colors[(j+colorPos)%5], setOrder[position][j]);
 			}
 			//cardServ.update(card);
 		}
@@ -143,6 +145,7 @@ public class CardCostService {
 				CardCost cost = new CardCost(setOrder[position][j], card, token);
 				//System.out.println(cost.getQuantity());
 				cardcostRepo.save(cost);
+				card.getTokenCost().put(colors[(j+colorPos)%5], setOrder[position][j]);
 			}
 			//cardServ.update(card);
 		}	

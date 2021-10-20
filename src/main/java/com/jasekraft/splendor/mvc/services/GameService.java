@@ -35,6 +35,9 @@ public class GameService {
 	public void initialize(Game game) {
 		// Sets things based on players
 		int playerSize = game.getPlayers().size();
+		for(int i = 0; i< playerSize;i++) {
+			game.getPlayers().get(i).setTurn(i);
+		}
 		totalNobles = playerSize+1;
 		if(playerSize == 3) totalTokens = 5;
 		if(playerSize == 2) totalTokens = 4;

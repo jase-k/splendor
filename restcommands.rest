@@ -24,7 +24,7 @@ POST http://localhost:8080/users/new
 Content-Type: application/json
 
 {
-    "username": "Cecil",
+    "username": "Daniel",
     "password": "password",
     "confirm": "password"
 }
@@ -37,7 +37,7 @@ POST http://localhost:8080/games/join
 Content-Type: application/json
 
 {
-    "user_id": 2,
+    "user_id": 4,
     "game_id": 1
 }
 
