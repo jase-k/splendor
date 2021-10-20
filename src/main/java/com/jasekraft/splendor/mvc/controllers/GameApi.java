@@ -85,6 +85,7 @@ public class GameApi {
     @RequestMapping(value="/users/new", method=RequestMethod.POST)
     public User createUser(@RequestBody Map<String, Object> body) {
     	return userServ.create(new User((String)body.get("username"), 
+    		(String)body.get("email"),
     		(String)body.get("password"), (String)body.get("confirm")));
     }
     @RequestMapping(value="/users/{id}", method=RequestMethod.DELETE)
@@ -119,7 +120,7 @@ public class GameApi {
     
     @RequestMapping(value="/games/{gameId}/taketokens/{playerId}", method = RequestMethod.POST)
     public Game takeToken(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
-    	Game game = playerServ.addTokens(gameId, playerId, (Long[])body.get("tokens"));
+    	Game game = playerServ.addTokens(gameId, playerId, (List<Integer>)body.get("tokens"));
     	return game;
     }
     

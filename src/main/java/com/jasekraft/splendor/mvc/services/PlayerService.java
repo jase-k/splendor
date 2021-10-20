@@ -26,6 +26,9 @@ public class PlayerService {
     private final PlayerCardRepository playerCardRepo;
     private final NobleService nobleServ;
     
+	// Colors in their natural order.
+	private final String[] colors = {"onyx","sapphire","ruby","diamond","emerald", "gold"};
+    
     @Autowired
     public PlayerService(PlayerRepository playerRepo, 
     		GameService gameServ, TokenService tokenServ,
@@ -91,17 +94,28 @@ public class PlayerService {
     }
     
     // add Tokens
-	public Game addTokens(Long gameId, Long playerId, Long[] tokens) {
+	public Game addTokens(Long gameId, Long playerId, List<Integer>tokens) {
 		Player thisPlayer = find(playerId);
-		Game thisGame = gameServ.find(playerId);
+		Game thisGame = gameServ.find(gameId);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
 		List<Token> playerTokens = thisPlayer.getTokens();
 		List<Token> gameTokens = thisGame.getTokens();
-		for(Long tokenId : tokens) {
-			playerTokens.add(tokenServ.find(tokenId));	
-			gameTokens.remove(tokenServ.find(tokenId));
+		for(Integer tokenId : tokens) {
+			Token token = tokenServ.find(Long.valueOf(tokenId));
+			String tName = token.getName();
+			// Checking issue
+			// Integer gamePool = thisGame.getTokenPool().get(tName);
+			playerTokens.add(token);	
+			gameTokens.remove(token);
+			thisPlayer.getTokenPool().put(tName, 
+					thisPlayer.getTokenPool().get(tName)+1);
+			thisGame.getTokenPool().put(tName, 
+					thisGame.getTokenPool().get(tName)-1);	
 		}
-		update(thisPlayer);
-		gameServ.update(thisGame);
+		//update(thisPlayer);
+		thisGame.setTurn(thisGame.getTurn()+1);
+		//gameServ.update(thisGame);
 		return thisGame;
 	}
 	
@@ -139,7 +153,7 @@ public class PlayerService {
     		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Deck> decks = thisGame.getDecks();
-    	List<Card> cards = thisPlayer.getCards();
+    	//List<Card> cards = thisPlayer.getCards();
     	for(Deck deck : decks) {
     		//List<Card> deckCards = deck.getCards();
     		if(deck.getCards().contains(card)) 

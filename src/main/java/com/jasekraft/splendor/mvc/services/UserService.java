@@ -35,6 +35,9 @@ public class UserService {
     }
     
     public User register(User newUser, BindingResult result) {
+        if(userRepo.findByEmail(newUser.getEmail()).isPresent()) {
+            result.rejectValue("email", "Unique", "This email is already in use!");
+        }
         if(userRepo.findByUsername(newUser.getUsername()).isPresent()) {
             result.rejectValue("username", "Unique", "This username is already in use!");
         }
@@ -60,9 +63,9 @@ public class UserService {
         if(result.hasErrors()) {
             return null;
         }
-        Optional<User> potentialUser = userRepo.findByUsername(newLogin.getUsername());
+        Optional<User> potentialUser = userRepo.findByEmail(newLogin.getEmail());
         if(!potentialUser.isPresent()) {
-            result.rejectValue("username", "Unique", "Unknown username!");
+            result.rejectValue("email", "Unique", "Unknown email!");
             return null;
         }
         User user = potentialUser.get();

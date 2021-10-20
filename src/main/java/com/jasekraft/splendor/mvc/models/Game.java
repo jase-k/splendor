@@ -111,6 +111,7 @@ public class Game {
 		this.champion = champion;
 		this.tokens = tokens;
 		this.nobles = nobles;
+		this.tokenPool = new HashMap<String, Integer>();
 	}
 	
 	@PrePersist

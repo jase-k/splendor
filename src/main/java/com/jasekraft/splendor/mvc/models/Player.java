@@ -91,6 +91,17 @@ public class Player {
     
     public Player(User user) {
     	this.user = user;
+    	this.cards = new ArrayList<>();
+    	this.games = new ArrayList<>();
+    	this.nobles = new ArrayList<>();
+    	this.tokens = new ArrayList<>();
+    	this.tokenPool = new HashMap<String, Integer>();
+    	this.tokenPool.put("ruby",0);
+		this.tokenPool.put("sapphire",0);
+		this.tokenPool.put("emerald",0);
+		this.tokenPool.put("diamond",0);
+		this.tokenPool.put("onyx",0);
+		this.tokenPool.put("gold", 0);
     }
 
 	public Long getId() {
