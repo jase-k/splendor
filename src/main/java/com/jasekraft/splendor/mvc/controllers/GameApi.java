@@ -88,7 +88,7 @@ public class GameApi {
     	return gameServ.create(new Game(player));
     }
     
-
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games/{id}")
     public Game getGame(@PathVariable("id") Long id) {
         return gameServ.find(id);
