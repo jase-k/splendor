@@ -88,6 +88,12 @@ public class GameApi {
     	return gameServ.create(new Game(player));
     }
     
+
+    @RequestMapping("/games/{id}")
+    public Game getGame(@PathVariable("id") Long id) {
+        return gameServ.find(id);
+    }
+    
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{id}", method=RequestMethod.DELETE)
     public String deleteGame(@PathVariable("id") Long id) {
@@ -99,6 +105,7 @@ public class GameApi {
     @RequestMapping(value="/users/new", method=RequestMethod.POST)
     public User createUser(@RequestBody Map<String, Object> body) {
     	return userServ.create(new User((String)body.get("username"), 
+    		(String)body.get("email"),
     		(String)body.get("password"), (String)body.get("confirm")));
     }
     
@@ -140,21 +147,21 @@ public class GameApi {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/taketokens/{playerId}", method = RequestMethod.POST)
     public Game takeToken(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
-    	Game game = playerServ.addTokens(gameId, playerId, (Long[])body.get("tokens"));
+    	Game game = playerServ.addTokens(gameId, playerId, (List<Integer>)body.get("tokens"));
     	return game;
     }
     
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/takecard/{playerId}", method = RequestMethod.POST)
     public Game takeCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
-    	Game game = playerServ.addCard(gameId, playerId, (Long)body.get("card_id"));
+    	Game game = playerServ.addCard(gameId, playerId, Long.valueOf((Integer)body.get("card_id")));
     	return game;
     }
     
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/reservecard/{playerId}", method = RequestMethod.POST)
     public Game reserveCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
-    	Game game = playerServ.reserveCard(gameId, playerId, (Long)body.get("card_id"));
+    	Game game = playerServ.reserveCard(gameId, playerId,  Long.valueOf((Integer)body.get("card_id")));
     	return game;
     }
     

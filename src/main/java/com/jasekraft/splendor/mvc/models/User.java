@@ -14,6 +14,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -30,7 +31,13 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(unique=true)
+	@NotEmpty(message="Email is required!")
+	@Email(message="Please enter a valid email!")
+	private String email;
+	
 	@NotEmpty(message="Username is required!")
+	@Column(unique = true)
 	@Size(min=3, max=30, message="Username must be between 3 and 30 characters")
 	private String username;
 	
@@ -61,8 +68,9 @@ public class User {
 	
 	public User() {}
 
-	public User(String username, String password, String confirm) {
+	public User(String username, String email, String password, String confirm) {
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.confirm = confirm;
 	}
@@ -131,6 +139,14 @@ public class User {
 
 	public void setPlayers(List<Player> players) {
 		this.players = players;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 

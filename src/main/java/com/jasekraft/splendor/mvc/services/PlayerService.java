@@ -1,6 +1,7 @@
 package com.jasekraft.splendor.mvc.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class PlayerService {
     private final CardService cardServ;
     private final PlayerCardRepository playerCardRepo;
     private final NobleService nobleServ;
+    
+	// Colors in their natural order.
+	private final String[] colors = {"onyx","sapphire","ruby","diamond","emerald", "gold"};
     
     @Autowired
     public PlayerService(PlayerRepository playerRepo, 
@@ -91,16 +95,30 @@ public class PlayerService {
     }
     
     // add Tokens
-	public Game addTokens(Long gameId, Long playerId, Long[] tokens) {
+	public Game addTokens(Long gameId, Long playerId, List<Integer>tokens) {
 		Player thisPlayer = find(playerId);
-		Game thisGame = gameServ.find(playerId);
+		Game thisGame = gameServ.find(gameId);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
 		List<Token> playerTokens = thisPlayer.getTokens();
 		List<Token> gameTokens = thisGame.getTokens();
-		for(Long tokenId : tokens) {
-			playerTokens.add(tokenServ.find(tokenId));	
-			gameTokens.remove(tokenServ.find(tokenId));
+		//checks action
+		
+		//performs action
+		for(Integer tokenId : tokens) {
+			Token token = tokenServ.find(Long.valueOf(tokenId));
+			String tName = token.getName();
+			// Checking issue
+			// Integer gamePool = thisGame.getTokenPool().get(tName);
+			playerTokens.add(token);	
+			gameTokens.remove(token);
+			thisPlayer.getTokenPool().put(tName, 
+					thisPlayer.getTokenPool().get(tName)+1);
+			thisGame.getTokenPool().put(tName, 
+					thisGame.getTokenPool().get(tName)-1);	
 		}
 		update(thisPlayer);
+		thisGame.setTurn(thisGame.getTurn()+1);
 		gameServ.update(thisGame);
 		return thisGame;
 	}
@@ -113,6 +131,8 @@ public class PlayerService {
     		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Card> cards = thisPlayer.getCards();
+    	PlayerCard pC;
+    	// Remove from deck / make relation
     	if(!cards.contains(card)) {
 	    	List<Deck> decks = thisGame.getDecks();
 	    	for(Deck deck : decks) {
@@ -120,15 +140,37 @@ public class PlayerService {
 	    		if(deck.getCards().contains(card)) 
 	    			deck.getCards().remove(card);
 	    	}
-	    	//cards.add(card);
-	    	//update(thisPlayer);
+	    	pC = new PlayerCard(true, card, thisPlayer);
+	    	playerCardRepo.save(pC);
+	    	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"1");
     	}
+    	else {
+    		pC =  playerCardRepo.findByCardAndPlayer(card, thisPlayer).get();
+    		pC.setOwned(true);
+    		String ownedCards = thisPlayer.getOwnedCards();
+    		thisPlayer.setOwnedCards(
+    			ownedCards.substring(0, thisPlayer.getCards().indexOf(card))+"1"+
+    			ownedCards.substring(thisPlayer.getCards().indexOf(card)+1));
+    	}
+    	// Pay for card
+    	Map<String, Integer> cardCost = card.getTokenCost();
+    	Map<String, Integer> playerPool = thisPlayer.getTokenPool();
+    	Map<String, Integer> gamePool = thisGame.getTokenPool();
+    	// cardCost returned to main pile
+    	int extraNeeded = 0;
+    	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
+    		playerPool.put(entry.getKey(), playerPool.get(entry.getKey())-entry.getValue());
+    		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+entry.getValue());
+    		for(int i = 0; i<entry.getValue();i++) {
+    			//playerCardRepo.delete(playerCardRepo.findById(cardId));
+    		}
+    	}
+    	playerPool.put("gold", playerPool.get("gold")-extraNeeded);
+    	gamePool.put("gold", gamePool.get("gold")+extraNeeded);
     	// update happens before pCServ finds?
-    	// updated(thisPlayer);
-    	PlayerCard pC = new PlayerCard(true, card, thisPlayer);
-    	playerCardRepo.save(pC);
+    	update(thisPlayer);
     	thisGame.setTurn(thisGame.getTurn()+1);
-		//gameServ.update(thisGame);
+		gameServ.update(thisGame);
 		return thisGame;
     }
     // reserve card
@@ -139,18 +181,19 @@ public class PlayerService {
     		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Deck> decks = thisGame.getDecks();
-    	List<Card> cards = thisPlayer.getCards();
+    	//List<Card> cards = thisPlayer.getCards();
     	for(Deck deck : decks) {
     		//List<Card> deckCards = deck.getCards();
     		if(deck.getCards().contains(card)) 
     			deck.getCards().remove(card);
     	}
     	//cards.add(card);
-    	//update(thisPlayer);
+    	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"0");
+    	update(thisPlayer);
     	PlayerCard pC = new PlayerCard(false, card, thisPlayer);
     	//pC.setOwned(false);
     	playerCardRepo.save(pC);
-		//gameServ.update(thisGame);
+		gameServ.update(thisGame);
 		return thisGame;
     }
     

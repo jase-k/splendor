@@ -41,7 +41,6 @@ public class GameService {
 		totalNobles = playerSize+1;
 		if(playerSize == 3) totalTokens = 5;
 		if(playerSize == 2) totalTokens = 4;
-		game.setTurn(1);
 		//Adds 3 decks for game and shuffle them 
 		// Initializes cards in deck;
 		cardDeckServ.init(game);
