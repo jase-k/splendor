@@ -55,6 +55,11 @@ public class HomeController {
         newLogin.setUsername((String) body.get("username"));
         newLogin.setPassword((String) body.get("password"));
     	User user = userServ.login(newLogin, result);
+        if(result.hasErrors()) {
+            model.addAttribute("newUser", new User());
+            return null;
+        }
+        session.setAttribute("user_id", user.getId());
         return user;
     }
     
