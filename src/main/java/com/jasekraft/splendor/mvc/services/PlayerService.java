@@ -27,6 +27,7 @@ public class PlayerService {
     private final CardService cardServ;
     private final PlayerCardRepository playerCardRepo;
     private final NobleService nobleServ;
+    private final CardDeckService cardDeckServ;
     
 	// Colors in their natural order.
 	private final String[] colors = {"onyx","sapphire","ruby","diamond","emerald", "gold"};
@@ -35,13 +36,14 @@ public class PlayerService {
     public PlayerService(PlayerRepository playerRepo, 
     		GameService gameServ, TokenService tokenServ,
     		CardService cardServ, PlayerCardRepository playerCardRepo,
-    		NobleService nobleServ) {
+    		NobleService nobleServ, CardDeckService cardDeckServ) {
         this.playerRepo = playerRepo;
         this.gameServ = gameServ;
         this.tokenServ = tokenServ;
         this.cardServ = cardServ;
         this.playerCardRepo = playerCardRepo;
         this.nobleServ = nobleServ;
+        this.cardDeckServ = cardDeckServ;
     }
     
     //Unique
@@ -188,7 +190,8 @@ public class PlayerService {
 	    	for(Deck deck : decks) {
 	    		//List<Card> deckCards = deck.getCards();
 	    		if(deck.getCards().contains(card)) 
-	    			deck.getCards().remove(card);
+	    			cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
+	    			//deck.getCards().remove(card);
 	    	}
 	    	//pC = new PlayerCard(true, card, thisPlayer);
 	    	//playerCardRepo.save(pC);
@@ -242,7 +245,7 @@ public class PlayerService {
     	for(Deck deck : decks) {
     		//List<Card> deckCards = deck.getCards();
     		if(deck.getCards().contains(card)) 
-    			deck.getCards().remove(card);
+    			cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
     	}
     	//cards.add(card);
     	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"0");
