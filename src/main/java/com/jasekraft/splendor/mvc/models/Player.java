@@ -25,6 +25,8 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	private Long character_id;
+	
 	//@JsonBackReference
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","players"})
     @ManyToOne(fetch = FetchType.LAZY)
@@ -159,6 +161,16 @@ public class Player {
 
 	public void setTurn(int turn) {
 		this.turn = turn;
+	}
+
+
+	public Long getCharacter_id() {
+		return character_id;
+	}
+
+
+	public void setCharacter_id(Long character_id) {
+		this.character_id = character_id;
 	}
     
     
