@@ -63,7 +63,7 @@ public class UserService {
         if(result.hasErrors()) {
             return null;
         }
-        Optional<User> potentialUser = userRepo.findByEmail(newLogin.getEmail());
+        Optional<User> potentialUser = userRepo.findByUsername(newLogin.getUsername());
         if(!potentialUser.isPresent()) {
             result.rejectValue("email", "Unique", "Unknown email!");
             return null;

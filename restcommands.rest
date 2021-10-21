@@ -16,7 +16,7 @@ GET http://localhost:8080/games/
 GET http://localhost:8080/users/
 
 ### Create new game
-GET http://localhost:8080/games/new
+GET http://localhost:8080/games/new?user_id=1&character_id=1
 
 ### Delete game
 DELETE http://localhost:8080/games/1
@@ -52,7 +52,8 @@ Content-Type: application/json
 
 {
     "user_id": 2,
-    "game_id": 1
+    "game_id": 1,
+    "character_id":2
 }
 
 ### Player leaves game
@@ -79,20 +80,20 @@ Content-Type: application/json
 # 4 - Diamond
 # 5 - Emerald
 # 6 - Gold
-POST http://localhost:8080/games/1/taketokens/2
+POST http://localhost:8080/games/1/taketokens/3
 Content-Type: application/json
 
 {
-    "tokens":[1, 2, 4]
+    "tokens":[1,2,5]
 }
 
 
 ### Takes card /games/{gameId}/takecard/{playerId}
-POST http://localhost:8080/games/1/takecard/1
+POST http://localhost:8080/games/1/takecard/3
 Content-Type: application/json
 
 {
-    "card_id": 27
+    "card_id": 22
 }
 
 ### Reserves card /games/{gameId}/takecard/{playerId}
@@ -100,5 +101,13 @@ POST http://localhost:8080/games/1/reservecard/1
 Content-Type: application/json
 
 {
-    "card_id": 37
+    "card_id": 29
+}
+
+### Gives a player a noble
+POST http://localhost:8080/games/1/takenoble/3
+Content-Type: application/json
+
+{
+    "noble_id": 7
 }

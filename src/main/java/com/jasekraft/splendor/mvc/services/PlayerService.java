@@ -103,7 +103,30 @@ public class PlayerService {
 		List<Token> playerTokens = thisPlayer.getTokens();
 		List<Token> gameTokens = thisGame.getTokens();
 		//checks action
-		
+		//Size is 1 = always gold
+		if(tokens.size() == 1) {
+				Token token = tokenServ.find("gold");
+				if(!gameTokens.contains(token))
+					return thisGame;
+			}
+		// size is 2
+		else if(tokens.size() == 2) {
+			Token token = tokenServ.find(Long.valueOf(tokens.get(0)));
+			if(thisGame.getTokenPool().get(token.getName())<2)
+				return thisGame;
+		}
+		//Size is 3
+		else if(tokens.size() == 3) {
+			if(tokens.get(0).equals(tokens.get(1)) || tokens.get(2).equals(tokens.get(1))|| tokens.get(2).equals(tokens.get(0)))
+				return thisGame;
+			for(Integer tokenId : tokens) {
+				Token token = tokenServ.find(Long.valueOf(tokenId));
+				if(!gameTokens.contains(token))
+					return thisGame;
+			}
+		}
+		else
+			return thisGame;
 		//performs action
 		for(Integer tokenId : tokens) {
 			Token token = tokenServ.find(Long.valueOf(tokenId));
@@ -130,7 +153,22 @@ public class PlayerService {
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
     		return thisGame;
     	Card card = cardServ.find(cardId);
+    	// Check if card can be paid
+    	Map<String, Integer> cardCost = card.getTokenCost();
+    	Map<String, Integer> playerPool = thisPlayer.getTokenPool();
+    	Map<String, Integer> gamePool = thisGame.getTokenPool();
+    	// cardCost returned to main pile
+    	int extraNeeded = 0;
+    	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
+    		if(entry.getValue()>playerPool.get(entry.getKey()))
+    			extraNeeded+= entry.getValue()-playerPool.get(entry.getKey());
+    	}
+    	if(extraNeeded > playerPool.get("gold"))
+    		return thisGame;
+    	
     	List<Card> cards = thisPlayer.getCards();
+    	List<Token> playerTokens = thisPlayer.getTokens();
+		List<Token> gameTokens = thisGame.getTokens();
     	PlayerCard pC;
     	// Remove from deck / make relation
     	if(!cards.contains(card)) {
@@ -152,21 +190,26 @@ public class PlayerService {
     			ownedCards.substring(0, thisPlayer.getCards().indexOf(card))+"1"+
     			ownedCards.substring(thisPlayer.getCards().indexOf(card)+1));
     	}
+
     	// Pay for card
-    	Map<String, Integer> cardCost = card.getTokenCost();
-    	Map<String, Integer> playerPool = thisPlayer.getTokenPool();
-    	Map<String, Integer> gamePool = thisGame.getTokenPool();
-    	// cardCost returned to main pile
-    	int extraNeeded = 0;
     	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
-    		playerPool.put(entry.getKey(), playerPool.get(entry.getKey())-entry.getValue());
+    		playerPool.put(entry.getKey(), Math.max(playerPool.get(entry.getKey())-entry.getValue(),0));
     		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+entry.getValue());
     		for(int i = 0; i<entry.getValue();i++) {
-    			//playerCardRepo.delete(playerCardRepo.findById(cardId));
+    			Token token = tokenServ.find(entry.getKey());
+    			if(playerTokens.contains(token)) {
+    				playerTokens.remove(token);	
+    				gameTokens.add(token);
+    			}
     		}
     	}
     	playerPool.put("gold", playerPool.get("gold")-extraNeeded);
     	gamePool.put("gold", gamePool.get("gold")+extraNeeded);
+    	Token gold = tokenServ.find("gold");
+    	for(int i = 0; i<extraNeeded;i++) {
+    		playerTokens.remove(gold);	
+			gameTokens.add(gold);
+    	}
     	// update happens before pCServ finds?
     	update(thisPlayer);
     	thisGame.setTurn(thisGame.getTurn()+1);
@@ -189,10 +232,11 @@ public class PlayerService {
     	}
     	//cards.add(card);
     	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"0");
-    	update(thisPlayer);
+ 
     	PlayerCard pC = new PlayerCard(false, card, thisPlayer);
-    	//pC.setOwned(false);
     	playerCardRepo.save(pC);
+       	update(thisPlayer);
+
 		gameServ.update(thisGame);
 		return thisGame;
     }
@@ -201,8 +245,20 @@ public class PlayerService {
     public Game addNoble(Long gameId, Long playerId, Long nobleId) {
     	Player thisPlayer = find(playerId);
     	Noble noble = nobleServ.find(nobleId);
-    	List<Noble> nobles = thisPlayer.getNobles();
     	Game thisGame = gameServ.find(gameId);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
+    	if(!thisGame.getNobles().contains(noble))
+    		return thisGame;
+    	Map<String, Integer> playerPool = thisPlayer.getTokenPool();
+    	Map<String, Integer> nobleCost = noble.getTokenCost();
+    	// reject if nobles cost more than player
+    	for(Map.Entry<String,Integer> entry : nobleCost.entrySet()) {
+    		if(entry.getValue() > playerPool.get(entry.getKey()))
+    			return thisGame;
+    	}
+    	List<Noble> nobles = thisPlayer.getNobles();
+    	
     	nobles.add(noble);
     	thisGame.getNobles().remove(noble);
     	update(thisPlayer);
