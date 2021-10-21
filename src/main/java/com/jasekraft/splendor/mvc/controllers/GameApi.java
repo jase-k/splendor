@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,11 +48,14 @@ public class GameApi {
         this.nobleCostServ = nobleCostServ;
         this.cardCostServ = cardCostServ;
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games")
     @ResponseBody
     public List<Game> index() {
         return gameServ.all();
     }
+    
     @RequestMapping(value = "/dbinit", method=RequestMethod.POST)
     public void init(@RequestBody Map<String, Object> body) {
         if(body.get("password").equals("root")) {
@@ -63,43 +67,56 @@ public class GameApi {
         	cardCostServ.init();
         }
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games/")
     public List<Game> games() {
     	return gameServ.all();
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/users/")
     public List<User> users() {
     	return userServ.all();
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games/new")
-    public Game createGame() {
-    	return gameServ.create(new Game());
+    public Game createGame(@RequestParam("user_id")Long user_id) {
+    	Player player = new Player(userServ.findUser(user_id));
+    	playerServ.create(player);
+    	return gameServ.create(new Game(player));
     }
     
+
     @RequestMapping("/games/{id}")
     public Game getGame(@PathVariable("id") Long id) {
         return gameServ.find(id);
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{id}", method=RequestMethod.DELETE)
     public String deleteGame(@PathVariable("id") Long id) {
         gameServ.delete(id);
         return "deleted";
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/users/new", method=RequestMethod.POST)
     public User createUser(@RequestBody Map<String, Object> body) {
     	return userServ.create(new User((String)body.get("username"), 
     		(String)body.get("email"),
     		(String)body.get("password"), (String)body.get("confirm")));
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/users/{id}", method=RequestMethod.DELETE)
     public String deleteUser(@PathVariable("id") Long id) {
         userServ.delete(id);
         return "deleted";
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/join", method=RequestMethod.POST)
     public Game joinGame(@RequestBody Map<String, Object> body) {
     	Long userId = Long.valueOf((Integer)body.get("user_id"));
@@ -108,6 +125,8 @@ public class GameApi {
         gamePlayerServ.addRelation(gameId, player.getId());
         return gameServ.find(gameId);
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/leave", method=RequestMethod.POST)
     public Game leaveGame(@RequestBody Map<String, Object> body) {
     	Long playerId = Long.valueOf((Integer)body.get("player_id"));
@@ -117,6 +136,7 @@ public class GameApi {
         return gameServ.find(gameId);
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/start", method=RequestMethod.POST)
     public Game startGame(@RequestBody Map<String, Object> body) {
     	Game game = gameServ.find(Long.valueOf((Integer)body.get("game_id")));
@@ -124,24 +144,28 @@ public class GameApi {
     	return game;
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/taketokens/{playerId}", method = RequestMethod.POST)
     public Game takeToken(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.addTokens(gameId, playerId, (List<Integer>)body.get("tokens"));
     	return game;
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/takecard/{playerId}", method = RequestMethod.POST)
     public Game takeCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.addCard(gameId, playerId, Long.valueOf((Integer)body.get("card_id")));
     	return game;
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/reservecard/{playerId}", method = RequestMethod.POST)
     public Game reserveCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.reserveCard(gameId, playerId,  Long.valueOf((Integer)body.get("card_id")));
     	return game;
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/takenoble/{playerId}", method = RequestMethod.POST)
     public Game takeNoble(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.addNoble(gameId, playerId, (Long)body.get("noble_id"));
