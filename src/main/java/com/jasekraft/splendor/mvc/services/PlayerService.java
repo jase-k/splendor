@@ -28,7 +28,7 @@ public class PlayerService {
     private final PlayerCardRepository playerCardRepo;
     private final NobleService nobleServ;
     private final CardDeckService cardDeckServ;
-    
+    private final DeckService deckServ;
 	// Colors in their natural order.
 	private final String[] colors = {"onyx","sapphire","ruby","diamond","emerald", "gold"};
     
@@ -36,7 +36,8 @@ public class PlayerService {
     public PlayerService(PlayerRepository playerRepo, 
     		GameService gameServ, TokenService tokenServ,
     		CardService cardServ, PlayerCardRepository playerCardRepo,
-    		NobleService nobleServ, CardDeckService cardDeckServ) {
+    		NobleService nobleServ, CardDeckService cardDeckServ,
+    		DeckService deckServ) {
         this.playerRepo = playerRepo;
         this.gameServ = gameServ;
         this.tokenServ = tokenServ;
@@ -44,6 +45,7 @@ public class PlayerService {
         this.playerCardRepo = playerCardRepo;
         this.nobleServ = nobleServ;
         this.cardDeckServ = cardDeckServ;
+        this.deckServ = deckServ;
     }
     
     //Unique
@@ -189,12 +191,18 @@ public class PlayerService {
 	    	List<Deck> decks = thisGame.getDecks();
 	    	for(Deck deck : decks) {
 	    		//List<Card> deckCards = deck.getCards();
-	    		if(deck.getCards().contains(card)) 
-	    			cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
+	    		if(deck.getCards().contains(card)) {
+	    			//cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
+	    			card.getDecks().remove(deck);
+	    			cardServ.update(card);
+	    			
+	    			//cardDeckServ.removeRelation(deck.getId(), card.getId());
+	    		}
 	    			//deck.getCards().remove(card);
 	    	}
 	    	//pC = new PlayerCard(true, card, thisPlayer);
 	    	//playerCardRepo.save(pC);
+	    	gameServ.update(thisGame);
 	    	cards.add(card);
 	    	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"1");
     	}
@@ -206,6 +214,7 @@ public class PlayerService {
     			ownedCards.substring(0, thisPlayer.getCards().indexOf(card))+"1"+
     			ownedCards.substring(thisPlayer.getCards().indexOf(card)+1));
     	}
+    	thisGame = gameServ.find(gameId);
     	// Pay for card
     	for(Map.Entry<String,Integer> entry : finalTransaction.entrySet()) {
     		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+entry.getValue());
@@ -230,8 +239,8 @@ public class PlayerService {
     	update(thisPlayer);
     	thisGame.setTurn(thisGame.getTurn()+1);
 		gameServ.update(thisGame);
-		checkChampion(gameId);
-		return thisGame;
+		//checkChampion(gameId);
+		return checkChampion(gameId);
     }
     // reserve card
     public Game reserveCard(Long gameId, Long playerId, Long cardId) {
@@ -244,8 +253,10 @@ public class PlayerService {
     	//List<Card> cards = thisPlayer.getCards();
     	for(Deck deck : decks) {
     		//List<Card> deckCards = deck.getCards();
-    		if(deck.getCards().contains(card)) 
+    		if(deck.getCards().contains(card)) {
     			cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
+    			deckServ.update(deck);
+    		}
     	}
     	//cards.add(card);
     	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"0");
@@ -254,7 +265,7 @@ public class PlayerService {
     	playerCardRepo.save(pC);
        	update(thisPlayer);
 
-		gameServ.update(thisGame);
+		thisGame = gameServ.update(thisGame);
 		return thisGame;
     }
     
@@ -280,8 +291,8 @@ public class PlayerService {
     	thisGame.getNobles().remove(noble);
     	update(thisPlayer);
 		gameServ.update(thisGame);
-		checkChampion(gameId);
-		return thisGame;
+		
+		return checkChampion(gameId);
     }
     /*
     public Game addNoble(Game game, Player player) {

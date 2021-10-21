@@ -80,20 +80,20 @@ Content-Type: application/json
 # 4 - Diamond
 # 5 - Emerald
 # 6 - Gold
-POST http://localhost:8080/games/1/taketokens/1
+POST http://localhost:8080/games/1/taketokens/2
 Content-Type: application/json
 
 {
-    "tokens":[5, 2, 3]
+    "tokens":[2,5,3]
 }
 
 
 ### Takes card /games/{gameId}/takecard/{playerId}
-POST http://localhost:8080/games/1/takecard/2
+POST http://localhost:8080/games/1/takecard/1
 Content-Type: application/json
 
 {
-    "card_id": 44
+    "card_id": 11
 }
 
 ### Reserves card /games/{gameId}/takecard/{playerId}
@@ -101,13 +101,13 @@ POST http://localhost:8080/games/1/reservecard/1
 Content-Type: application/json
 
 {
-    "card_id": 44
+    "card_id": 25
 }
 
 ### Gives a player a noble
-POST http://localhost:8080/games/1/takenoble/3
+POST http://localhost:8080/games/1/takenoble/1
 Content-Type: application/json
 
 {
-    "noble_id": 7
+    "noble_id": 1
 }

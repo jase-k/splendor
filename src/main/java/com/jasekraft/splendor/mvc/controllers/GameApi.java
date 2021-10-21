@@ -164,14 +164,26 @@ public class GameApi {
     @RequestMapping(value="/games/{gameId}/takecard/{playerId}", method = RequestMethod.POST)
     public Game takeCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.addCard(gameId, playerId, Long.valueOf((Integer)body.get("card_id")));
-    	return game;
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return gameServ.find(gameId);
     }
     
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value="/games/{gameId}/reservecard/{playerId}", method = RequestMethod.POST)
     public Game reserveCard(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	Game game = playerServ.reserveCard(gameId, playerId,  Long.valueOf((Integer)body.get("card_id")));
-    	return game;
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return gameServ.find(gameId);
     }
     
     @CrossOrigin(origins = "http://localhost:3000")
