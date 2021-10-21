@@ -55,7 +55,7 @@ public class HomeController {
     	User user = userServ.login(newLogin, result);
         if(result.hasErrors()) {
             model.addAttribute("newUser", new User());
-            return "index.jsp";
+            return null;
         }
         session.setAttribute("user_id", user.getId());
         return user;
