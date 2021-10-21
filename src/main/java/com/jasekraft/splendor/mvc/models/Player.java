@@ -27,6 +27,8 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	private Long character_id;
+	
 	//@JsonBackReference
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","players"})
     @ManyToOne(fetch = FetchType.LAZY)
@@ -95,7 +97,7 @@ public class Player {
     }
     
     
-    public Player(User user) {
+    public Player(User user, Long character_id) {
     	this.user = user;
     	this.cards = new ArrayList<>();
     	this.games = new ArrayList<>();
@@ -109,6 +111,7 @@ public class Player {
 		this.tokenPool.put("onyx",0);
 		this.tokenPool.put("gold", 0);
 		this.ownedCards = "";
+		this.character_id = character_id;
     }
 
 	public Long getId() {
@@ -180,6 +183,15 @@ public class Player {
 	}
 
 
+	public Long getCharacter_id() {
+		return character_id;
+	}
+
+
+	public void setCharacter_id(Long character_id) {
+		this.character_id = character_id;
+	}
+    
 	public String getOwnedCards() {
 		return ownedCards;
 	}

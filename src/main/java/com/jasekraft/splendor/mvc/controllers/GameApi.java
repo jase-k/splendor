@@ -82,8 +82,8 @@ public class GameApi {
     
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/games/new")
-    public Game createGame(@RequestParam("user_id")Long user_id) {
-    	Player player = new Player(userServ.findUser(user_id));
+    public Game createGame(@RequestParam("user_id")Long user_id, @RequestParam("character_id") Long character_id) {
+    	Player player = new Player(userServ.findUser(user_id), character_id);
     	playerServ.create(player);
     	return gameServ.create(new Game(player));
     }
@@ -121,7 +121,7 @@ public class GameApi {
     public Game joinGame(@RequestBody Map<String, Object> body) {
     	Long userId = Long.valueOf((Integer)body.get("user_id"));
     	Long gameId = Long.valueOf((Integer)body.get("game_id"));
-        Player player = playerServ.create(new Player(userServ.findUser(userId)));
+        Player player = playerServ.create(new Player(userServ.findUser(userId), Long.valueOf((Integer)body.get("character_id"))));
         gamePlayerServ.addRelation(gameId, player.getId());
         return gameServ.find(gameId);
     }
