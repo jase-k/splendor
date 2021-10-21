@@ -48,6 +48,7 @@ public class GameService {
 		nobleServ.init(game, totalNobles);
 		//Add tokens to the game
 		tokenServ.init(game, totalTokens);
+		game.setTurn(1);
 		update(game);
 		//gameRepo.save(game);
 	}
