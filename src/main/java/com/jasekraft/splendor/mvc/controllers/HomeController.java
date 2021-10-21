@@ -6,19 +6,20 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.jasekraft.splendor.mvc.models.LoginUser;
 import com.jasekraft.splendor.mvc.models.User;
 import com.jasekraft.splendor.mvc.services.UserService;
 
-@Controller
+@RestController
 public class HomeController {
 
     private final UserService userServ;
@@ -47,18 +48,14 @@ public class HomeController {
         return "redirect:/home";
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, Object> body,BindingResult result, Model model, HttpSession session) {
+    public User login(@RequestBody Map<String, Object> body,BindingResult result, Model model, HttpSession session) {
         LoginUser newLogin = new LoginUser();
         newLogin.setUsername((String) body.get("username"));
         newLogin.setPassword((String) body.get("password"));
     	User user = userServ.login(newLogin, result);
-        if(result.hasErrors()) {
-            model.addAttribute("newUser", new User());
-            return "index.jsp";
-        }
-        session.setAttribute("user_id", user.getId());
-        return "redirect:/home";
+        return user;
     }
     
     @GetMapping("/logout")
