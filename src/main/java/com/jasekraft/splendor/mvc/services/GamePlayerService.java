@@ -61,11 +61,11 @@ public class GamePlayerService {
 	    	gamePlayerRepo.deleteById(id);
 	    }
 	    
-	    public GamePlayer update(GamePlayer deck) {
-	    	Optional<GamePlayer> optionalGamePlayer = gamePlayerRepo.findById(deck.getId());
+	    public GamePlayer update(GamePlayer gp) {
+	    	Optional<GamePlayer> optionalGamePlayer = gamePlayerRepo.findById(gp.getId());
 	    	if(optionalGamePlayer.isPresent()) {
-	    		gamePlayerRepo.save(deck);
-	    		return deck;
+	    		gamePlayerRepo.save(gp);
+	    		return gp;
 	    	}
 	    	else {
 	    		return null;
@@ -76,6 +76,7 @@ public class GamePlayerService {
 	    // This happens at start of game + also need to set turn counter to 0
 		public boolean addRelation(Long gameId,Long playerId) {
 			Game thisGame = gameServ.find(gameId);
+			System.out.print(false);
 			if(thisGame.getPlayers().size() >= 4)
 				return false;
 		    Player thisPlayer = playerServ.find(playerId);
