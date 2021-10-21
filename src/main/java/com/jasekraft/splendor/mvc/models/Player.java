@@ -97,7 +97,7 @@ public class Player {
     }
     
     
-    public Player(User user) {
+    public Player(User user, Long character_id) {
     	this.user = user;
     	this.cards = new ArrayList<>();
     	this.games = new ArrayList<>();
@@ -111,6 +111,7 @@ public class Player {
 		this.tokenPool.put("onyx",0);
 		this.tokenPool.put("gold", 0);
 		this.ownedCards = "";
+		this.character_id = character_id;
     }
 
 	public Long getId() {
