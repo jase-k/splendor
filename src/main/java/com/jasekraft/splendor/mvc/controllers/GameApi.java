@@ -121,7 +121,16 @@ public class GameApi {
     public Game joinGame(@RequestBody Map<String, Object> body) {
     	Long userId = Long.valueOf((Integer)body.get("user_id"));
     	Long gameId = Long.valueOf((Integer)body.get("game_id"));
-        Player player = playerServ.create(new Player(userServ.findUser(userId), Long.valueOf((Integer)body.get("character_id"))));
+    	Long character_id = Long.valueOf((Integer)body.get("character_id"));
+    	Game game = gameServ.find(gameId);
+    	int playerSize = game.getPlayers().size();
+		for(int i = 0; i< playerSize;i++) {
+			User user = game.getPlayers().get(i).getUser();
+			if(user.getId() == userId) {
+				return gameServ.find(gameId);
+			}
+		}
+        Player player = playerServ.create(new Player(userServ.findUser(userId), character_id));
         gamePlayerServ.addRelation(gameId, player.getId());
         return gameServ.find(gameId);
     }
