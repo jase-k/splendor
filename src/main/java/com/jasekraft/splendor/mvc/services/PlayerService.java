@@ -193,9 +193,9 @@ public class PlayerService {
 	    		//List<Card> deckCards = deck.getCards();
 	    		if(deck.getCards().contains(card)) {
 	    			//cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
-	    			card.getDecks().remove(deck);
-	    			cardServ.update(card);
-	    			
+	    			//card.getDecks().remove(deck);
+	    			//cardServ.update(card);
+	    			deck.getCards().remove(card);
 	    			//cardDeckServ.removeRelation(deck.getId(), card.getId());
 	    		}
 	    			//deck.getCards().remove(card);
@@ -254,8 +254,9 @@ public class PlayerService {
     	for(Deck deck : decks) {
     		//List<Card> deckCards = deck.getCards();
     		if(deck.getCards().contains(card)) {
-    			cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
-    			deckServ.update(deck);
+    			//cardDeckServ.delete(cardDeckServ.find(deck, card).getId());
+    			//deckServ.update(deck);
+    			deck.getCards().remove(card);
     		}
     	}
     	//cards.add(card);
