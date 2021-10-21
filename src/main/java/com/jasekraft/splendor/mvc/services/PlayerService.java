@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -153,20 +154,31 @@ public class PlayerService {
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
     		return thisGame;
     	Card card = cardServ.find(cardId);
+    	List<Card> cards = thisPlayer.getCards();
+    	Map<String, Integer> costReduction = new HashMap<>();
+    	for(int i = 0; i<colors.length-1;i++) {
+    		int total = 0;
+    		for(Card c : cards) {
+    			if(c.getTokenName().equals(colors[i])) total++;
+    		}
+    		costReduction.put(colors[i], total);
+    	}
     	// Check if card can be paid
     	Map<String, Integer> cardCost = card.getTokenCost();
     	Map<String, Integer> playerPool = thisPlayer.getTokenPool();
     	Map<String, Integer> gamePool = thisGame.getTokenPool();
+    	Map<String, Integer> finalTransaction = new HashMap<>();
     	// cardCost returned to main pile
     	int extraNeeded = 0;
     	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
-    		if(entry.getValue()>playerPool.get(entry.getKey()))
-    			extraNeeded+= entry.getValue()-playerPool.get(entry.getKey());
+    		if(entry.getValue()>playerPool.get(entry.getKey())+costReduction.get(entry.getKey())) 
+    			extraNeeded+= entry.getValue()-costReduction.get(entry.getKey())-playerPool.get(entry.getKey());
+    		finalTransaction.put(entry.getKey(), Math.min(Math.max(0,
+    			entry.getValue()-costReduction.get(entry.getKey())),playerPool.get(entry.getKey())));
     	}
     	if(extraNeeded > playerPool.get("gold"))
     		return thisGame;
-    	
-    	List<Card> cards = thisPlayer.getCards();
+    	finalTransaction.put("gold", extraNeeded);
     	List<Token> playerTokens = thisPlayer.getTokens();
 		List<Token> gameTokens = thisGame.getTokens();
     	PlayerCard pC;
@@ -178,8 +190,9 @@ public class PlayerService {
 	    		if(deck.getCards().contains(card)) 
 	    			deck.getCards().remove(card);
 	    	}
-	    	pC = new PlayerCard(true, card, thisPlayer);
-	    	playerCardRepo.save(pC);
+	    	//pC = new PlayerCard(true, card, thisPlayer);
+	    	//playerCardRepo.save(pC);
+	    	cards.add(card);
 	    	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"1");
     	}
     	else {
@@ -190,11 +203,10 @@ public class PlayerService {
     			ownedCards.substring(0, thisPlayer.getCards().indexOf(card))+"1"+
     			ownedCards.substring(thisPlayer.getCards().indexOf(card)+1));
     	}
-
     	// Pay for card
-    	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
-    		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+playerPool.get(entry.getKey()));
-    		playerPool.put(entry.getKey(), Math.max(playerPool.get(entry.getKey())-entry.getValue(),0));
+    	for(Map.Entry<String,Integer> entry : finalTransaction.entrySet()) {
+    		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+entry.getValue());
+    		playerPool.put(entry.getKey(), playerPool.get(entry.getKey())-entry.getValue());
     		
     		for(int i = 0; i<entry.getValue();i++) {
     			Token token = tokenServ.find(entry.getKey());
@@ -203,14 +215,14 @@ public class PlayerService {
     				gameTokens.add(token);
     			}
     		}
-    	}
+    	}/*
     	playerPool.put("gold", playerPool.get("gold")-extraNeeded);
     	gamePool.put("gold", gamePool.get("gold")+extraNeeded);
     	Token gold = tokenServ.find("gold");
     	for(int i = 0; i<extraNeeded;i++) {
     		playerTokens.remove(gold);	
 			gameTokens.add(gold);
-    	}
+    	}*/
     	// update happens before pCServ finds?
     	update(thisPlayer);
     	thisGame.setTurn(thisGame.getTurn()+1);
