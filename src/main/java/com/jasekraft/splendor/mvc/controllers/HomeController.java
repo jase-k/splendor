@@ -48,7 +48,7 @@ public class HomeController {
     }
     
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, Object> body,BindingResult result, Model model, HttpSession session) {
+    public User login(@RequestBody Map<String, Object> body,BindingResult result, Model model, HttpSession session) {
         LoginUser newLogin = new LoginUser();
         newLogin.setUsername((String) body.get("username"));
         newLogin.setPassword((String) body.get("password"));
@@ -58,7 +58,7 @@ public class HomeController {
             return "index.jsp";
         }
         session.setAttribute("user_id", user.getId());
-        return "redirect:/home";
+        return user;
     }
     
     @GetMapping("/logout")
