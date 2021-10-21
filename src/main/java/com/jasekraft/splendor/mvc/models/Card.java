@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
@@ -47,6 +48,7 @@ public class Card {
 	@PositiveOrZero
 	private Integer score;
 	
+	
 	//@JsonManagedReference
     //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JsonIgnore
@@ -56,6 +58,8 @@ public class Card {
 	
 	private String tokenName;
 	
+    @Lob
+    @Column(name = "token_pool", columnDefinition = "LONGBLOB")
 	private HashMap <String, Integer> tokenCost;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -64,7 +68,6 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"), 
             inverseJoinColumns = @JoinColumn(name = "player_id")
         )
-	
 	//@JsonIgnoreProperties("cards")
 	//@JsonBackReference
 	@JsonIgnore

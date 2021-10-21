@@ -9,9 +9,11 @@ Content-Type: application/json
 ### All Games
 GET http://localhost:8080/games/
 
+### One Game
+GET http://localhost:8080/games/
+
 ### All Users
 GET http://localhost:8080/users/
-
 
 ### Create new game
 GET http://localhost:8080/games/new
@@ -30,6 +32,17 @@ Content-Type: application/json
     "confirm": "password"
 }
 
+### Create 2nd new user
+POST http://localhost:8080/users/new
+Content-Type: application/json
+
+{
+    "username": "Beth",
+    "email": "b@aol.com",
+    "password": "password",
+    "confirm": "password"
+}
+
 ### Delete user
 DELETE http://localhost:8080/users/1
 
@@ -38,8 +51,8 @@ POST http://localhost:8080/games/join
 Content-Type: application/json
 
 {
-    "user_id": 3,
-    "game_id": 3
+    "user_id": 2,
+    "game_id": 1
 }
 
 ### Player leaves game
@@ -56,15 +69,36 @@ POST http://localhost:8080/games/start
 Content-Type: application/json
 
 {
-    "game_id": 3
+    "game_id": 1
 }
 
 ### Takes tokens /games/{gameId}/taketokens/{playerId}
-POST http://localhost:8080/games/3/taketokens/7
+# 1 - Onyx
+# 2 - Sapphire
+# 3 - Ruby
+# 4 - Diamond
+# 5 - Emerald
+# 6 - Gold
+POST http://localhost:8080/games/1/taketokens/2
 Content-Type: application/json
 
 {
-    "tokens":[1, 2, 3]
+    "tokens":[1, 2, 4]
 }
 
 
+### Takes card /games/{gameId}/takecard/{playerId}
+POST http://localhost:8080/games/1/takecard/1
+Content-Type: application/json
+
+{
+    "card_id": 27
+}
+
+### Reserves card /games/{gameId}/takecard/{playerId}
+POST http://localhost:8080/games/1/reservecard/1
+Content-Type: application/json
+
+{
+    "card_id": 37
+}

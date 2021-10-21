@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -56,7 +58,11 @@ public class Player {
     @JsonIgnore
     private List<Token> tokens;
     
+    @Lob
+    @Column(name = "token_pool", columnDefinition = "LONGBLOB")
     private HashMap <String, Integer> tokenPool;
+    
+    private String ownedCards;
 	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -102,6 +108,7 @@ public class Player {
 		this.tokenPool.put("diamond",0);
 		this.tokenPool.put("onyx",0);
 		this.tokenPool.put("gold", 0);
+		this.ownedCards = "";
     }
 
 	public Long getId() {
@@ -171,6 +178,14 @@ public class Player {
 	public void setTurn(int turn) {
 		this.turn = turn;
 	}
-    
-    
+
+
+	public String getOwnedCards() {
+		return ownedCards;
+	}
+
+
+	public void setOwnedCards(String ownedCards) {
+		this.ownedCards = ownedCards;
+	}
 }
