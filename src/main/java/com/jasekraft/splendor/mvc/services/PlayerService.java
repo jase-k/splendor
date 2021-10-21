@@ -193,8 +193,9 @@ public class PlayerService {
 
     	// Pay for card
     	for(Map.Entry<String,Integer> entry : cardCost.entrySet()) {
+    		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+playerPool.get(entry.getKey()));
     		playerPool.put(entry.getKey(), Math.max(playerPool.get(entry.getKey())-entry.getValue(),0));
-    		gamePool.put(entry.getKey(), gamePool.get(entry.getKey())+entry.getValue());
+    		
     		for(int i = 0; i<entry.getValue();i++) {
     			Token token = tokenServ.find(entry.getKey());
     			if(playerTokens.contains(token)) {
@@ -214,6 +215,7 @@ public class PlayerService {
     	update(thisPlayer);
     	thisGame.setTurn(thisGame.getTurn()+1);
 		gameServ.update(thisGame);
+		checkChampion(gameId);
 		return thisGame;
     }
     // reserve card
@@ -241,7 +243,7 @@ public class PlayerService {
 		return thisGame;
     }
     
-	// add noble
+	// add noble through route
     public Game addNoble(Long gameId, Long playerId, Long nobleId) {
     	Player thisPlayer = find(playerId);
     	Noble noble = nobleServ.find(nobleId);
@@ -263,6 +265,37 @@ public class PlayerService {
     	thisGame.getNobles().remove(noble);
     	update(thisPlayer);
 		gameServ.update(thisGame);
+		checkChampion(gameId);
 		return thisGame;
     }
+    /*
+    public Game addNoble(Game game, Player player) {
+    	List<Player> players = game.getPlayers();
+    	List<Noble> nobles =  game.getNobles();
+    	return game;
+    }*/
+    public Game checkChampion(Long gameId) {
+    	Game thisGame = gameServ.find(gameId);
+    	List<Player> players = thisGame.getPlayers();
+    	int score;
+    	String cardOwner;
+    	for(Player player : players) {
+    		score = 0;
+    		cardOwner =  player.getOwnedCards();
+    		List<Card> pC =  player.getCards();
+    		List<Noble> pN = player.getNobles();
+    		for(Noble noble : pN) {
+    			score+= noble.getScore();
+    		}
+    		for(int i = 0; i<pC.size();i++) {
+    			score += cardOwner.charAt(i) == '1' ? pC.get(i).getScore() : 0;
+    		}
+    		if(score >= 15) {
+    			thisGame.setChampion(player);
+    		}
+    	}
+		gameServ.update(thisGame);
+    	return thisGame;
+    }
+    
 }

@@ -53,6 +53,7 @@ public class Game {
     @OneToMany(mappedBy="game", fetch = FetchType.LAZY)
     private List<Deck> decks;
     
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","games"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="champion_id")
     private Player champion;
