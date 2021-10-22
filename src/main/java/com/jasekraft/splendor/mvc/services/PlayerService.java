@@ -280,6 +280,7 @@ public class PlayerService {
     	if(!thisGame.getNobles().contains(noble))
     		return thisGame;
     	List<Card> playerCards = thisPlayer.getCards();
+    	String playerOwnership = thisPlayer.getOwnedCards();
     	Map<String, Integer> playerPool = new HashMap<>();
     	playerPool.put("onyx", 0);
     	playerPool.put("sapphire", 0);
@@ -287,8 +288,11 @@ public class PlayerService {
     	playerPool.put("diamond", 0);
     	playerPool.put("emerald", 0);
     	Map<String, Integer> nobleCost = noble.getTokenCost();
+    	int i = 0;
     	for(Card card : playerCards) {
-    		playerPool.put(card.getTokenName(),1+ playerPool.get(card.getTokenName()));
+    		if(playerOwnership.charAt(i)=='1')
+    			playerPool.put(card.getTokenName(),1+ playerPool.get(card.getTokenName()));
+    		i++;
     	}
     	// reject if nobles cost more than player
     	for(Map.Entry<String,Integer> entry : nobleCost.entrySet()) {
