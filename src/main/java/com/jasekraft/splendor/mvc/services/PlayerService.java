@@ -148,10 +148,11 @@ public class PlayerService {
 		}
 		update(thisPlayer);
 		thisGame.setTurn(thisGame.getTurn()+1);
+		gameServ.update(thisGame);
 		if(thisGame.getTurn()%thisGame.getPlayers().size() == 0) {
     		return checkChampion(gameId);
     	}
-		gameServ.update(thisGame);
+		
 		return thisGame;
 	}
 	
@@ -241,6 +242,7 @@ public class PlayerService {
     	}*/
     	// update happens before pCServ finds?
     	update(thisPlayer);
+    	//gameServ.update(thisGame);
     	thisGame.setTurn(thisGame.getTurn()+1);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() == 0) {
     		return checkChampion(gameId);
@@ -327,6 +329,7 @@ public class PlayerService {
     	String cardOwner;
     	int j = 0;
     	int largest = 0;
+    	int mostCards = 0;
     	for(Player player : players) {
     		score[j]=0;
     		cardOwner =  player.getOwnedCards();
@@ -342,15 +345,31 @@ public class PlayerService {
     		}
     		if(score[j]>largest)
     			largest = score[j];
+    		j++;
     	}
+    	System.out.println(cardCount[0]);
+    	System.out.println(cardCount[1]);
+    	System.out.println(largest);
+    	System.out.println(score[0]);
+    	System.out.println(score[1]);
     	if(largest < 15)
     		return thisGame;
     	List<Integer> largestPosition = new ArrayList<>();
     	for(int i = 0; i< players.size(); i++) {
-    		if(score[i] == largest)
+    		if(score[i] == largest) {
     			largestPosition.add(i);
+        		if(cardCount[i] > mostCards)
+        			mostCards = cardCount[i];
+    		}
     	}
-    	thisGame.setChampion(players.get(largestPosition.get(0)));
+    	System.out.println(largestPosition.get(0));
+    	//System.out.println(cardCount[1]);
+    	//if(largestPosition.size() > 1){
+		for(int i = 0; i<largestPosition.size();i++)
+			if(cardCount[largestPosition.get(i)]==mostCards)
+				thisGame.getChampion().add(players.get(i));
+    	//}
+    	//thisGame.setChampion(players.get(largestPosition.get(0)));
 		gameServ.update(thisGame);
     	return thisGame;
     }

@@ -49,7 +49,8 @@ public class Deck {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="game_id")
     private Game game;
-    
+	
+	
     @ManyToMany
     @JoinTable(
             name = "decks_cards", 

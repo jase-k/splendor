@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -54,9 +53,8 @@ public class Game {
     private List<Deck> decks;
     
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","games"})
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="champion_id")
-    private Player champion;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Player> champion;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -110,7 +108,7 @@ public class Game {
 	public Game(Player player) {
 		this.turn = 0;
 		this.decks = new ArrayList<>();
-		this.champion = null;
+		this.champion = new ArrayList<>();
 		this.tokens =  new ArrayList<>();
 		this.nobles = new ArrayList<>();
 		this.players = new ArrayList<>();
@@ -122,7 +120,7 @@ public class Game {
 		super();
 		this.turn = turn;
 		this.decks = decks;
-		this.champion = champion;
+		this.champion = new ArrayList<>();
 		this.tokens = tokens;
 		this.nobles = nobles;
 		this.tokenPool = new HashMap<String, Integer>();
@@ -179,14 +177,13 @@ public class Game {
 		this.decks = decks;
 	}
 
-	public Player getChampion() {
+
+	public List<Player> getChampion() {
 		return champion;
 	}
-
-	public void setChampion(Player champion) {
+	public void setChampion(List<Player> champion) {
 		this.champion = champion;
 	}
-
 	public List<Token> getTokens() {
 		return tokens;
 	}
