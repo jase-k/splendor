@@ -149,6 +149,7 @@ public class PlayerService {
 	
 	// add card 
     public Game addCard(Long gameId, Long playerId, Long cardId) {
+    	System.out.println("Adding Card to Player");
     	Game thisGame = gameServ.find(gameId);
     	Player thisPlayer = find(playerId);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
