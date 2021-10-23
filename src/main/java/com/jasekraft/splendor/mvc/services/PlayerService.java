@@ -245,10 +245,11 @@ public class PlayerService {
     	update(thisPlayer);
     	//gameServ.update(thisGame);
     	thisGame.setTurn(thisGame.getTurn()+1);
+    	Game finalGame = gameServ.update(thisGame);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() == 0) {
     		return checkChampion(gameId);
     	}
-		return gameServ.update(thisGame);
+		return finalGame;
 		//checkChampion(gameId);
 		//return checkChampion(gameId);
     }
