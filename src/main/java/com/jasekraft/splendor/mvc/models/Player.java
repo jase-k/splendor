@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -88,6 +89,12 @@ public class Player {
     @JsonIgnore
     private List<Game> games;
     
+	//@JsonBackReference
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="game_id")
+	private Game gameWon;
+	
     public Player() {
     	this.cards = new ArrayList<>();
     	this.games = new ArrayList<>();
@@ -199,5 +206,15 @@ public class Player {
 
 	public void setOwnedCards(String ownedCards) {
 		this.ownedCards = ownedCards;
+	}
+
+
+	public Game getGameWon() {
+		return gameWon;
+	}
+
+
+	public void setGameWon(Game gameWon) {
+		this.gameWon = gameWon;
 	}
 }

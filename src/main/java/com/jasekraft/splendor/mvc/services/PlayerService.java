@@ -1,5 +1,6 @@
 package com.jasekraft.splendor.mvc.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +149,10 @@ public class PlayerService {
 		update(thisPlayer);
 		thisGame.setTurn(thisGame.getTurn()+1);
 		gameServ.update(thisGame);
+		if(thisGame.getTurn()%thisGame.getPlayers().size() == 0) {
+    		return checkChampion(gameId);
+    	}
+		
 		return thisGame;
 	}
 	
@@ -238,10 +243,14 @@ public class PlayerService {
     	}*/
     	// update happens before pCServ finds?
     	update(thisPlayer);
+    	//gameServ.update(thisGame);
     	thisGame.setTurn(thisGame.getTurn()+1);
-		gameServ.update(thisGame);
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() == 0) {
+    		return checkChampion(gameId);
+    	}
+		return gameServ.update(thisGame);
 		//checkChampion(gameId);
-		return checkChampion(gameId);
+		//return checkChampion(gameId);
     }
     // reserve card
     public Game reserveCard(Long gameId, Long playerId, Long cardId) {
@@ -262,7 +271,7 @@ public class PlayerService {
     	}
     	//cards.add(card);
     	thisPlayer.setOwnedCards(thisPlayer.getOwnedCards()+"0");
- 
+    	
     	PlayerCard pC = new PlayerCard(false, card, thisPlayer);
     	playerCardRepo.save(pC);
        	update(thisPlayer);
@@ -281,6 +290,7 @@ public class PlayerService {
     	if(!thisGame.getNobles().contains(noble))
     		return thisGame;
     	List<Card> playerCards = thisPlayer.getCards();
+    	String playerOwnership = thisPlayer.getOwnedCards();
     	Map<String, Integer> playerPool = new HashMap<>();
     	playerPool.put("onyx", 0);
     	playerPool.put("sapphire", 0);
@@ -288,8 +298,11 @@ public class PlayerService {
     	playerPool.put("diamond", 0);
     	playerPool.put("emerald", 0);
     	Map<String, Integer> nobleCost = noble.getTokenCost();
+    	int i = 0;
     	for(Card card : playerCards) {
-    		playerPool.put(card.getTokenName(),1+ playerPool.get(card.getTokenName()));
+    		if(playerOwnership.charAt(i)=='1')
+    			playerPool.put(card.getTokenName(),1+ playerPool.get(card.getTokenName()));
+    		i++;
     	}
     	// reject if nobles cost more than player
     	for(Map.Entry<String,Integer> entry : nobleCost.entrySet()) {
@@ -301,9 +314,7 @@ public class PlayerService {
     	nobles.add(noble);
     	thisGame.getNobles().remove(noble);
     	update(thisPlayer);
-		gameServ.update(thisGame);
-		
-		return checkChampion(gameId);
+		return gameServ.update(thisGame);
     }
     /*
     public Game addNoble(Game game, Player player) {
@@ -314,23 +325,52 @@ public class PlayerService {
     public Game checkChampion(Long gameId) {
     	Game thisGame = gameServ.find(gameId);
     	List<Player> players = thisGame.getPlayers();
-    	int score;
+    	int[] score = new int[players.size()];
+    	int[] cardCount = new int[players.size()];
     	String cardOwner;
+    	int j = 0;
+    	int largest = 0;
+    	int mostCards = 0;
     	for(Player player : players) {
-    		score = 0;
+    		score[j]=0;
     		cardOwner =  player.getOwnedCards();
     		List<Card> pC =  player.getCards();
     		List<Noble> pN = player.getNobles();
     		for(Noble noble : pN) {
-    			score+= noble.getScore();
+    			score[j] = score[j] + noble.getScore();
     		}
     		for(int i = 0; i<pC.size();i++) {
-    			score += cardOwner.charAt(i) == '1' ? pC.get(i).getScore() : 0;
+    			cardCount[j]++;
+    			if(cardOwner.charAt(i)=='1')
+    				score[j] = score[j] + pC.get(i).getScore();
     		}
-    		if(score >= 15) {
-    			thisGame.setChampion(player);
+    		if(score[j]>largest)
+    			largest = score[j];
+    		j++;
+    	}
+    	System.out.println(cardCount[0]);
+    	System.out.println(cardCount[1]);
+    	System.out.println(largest);
+    	System.out.println(score[0]);
+    	System.out.println(score[1]);
+    	if(largest < 15)
+    		return thisGame;
+    	List<Integer> largestPosition = new ArrayList<>();
+    	for(int i = 0; i< players.size(); i++) {
+    		if(score[i] == largest) {
+    			largestPosition.add(i);
+        		if(cardCount[i] > mostCards)
+        			mostCards = cardCount[i];
     		}
     	}
+    	System.out.println(largestPosition.get(0));
+    	//System.out.println(cardCount[1]);
+    	//if(largestPosition.size() > 1){
+		for(int i = 0; i<largestPosition.size();i++)
+			if(cardCount[largestPosition.get(i)]==mostCards)
+				thisGame.getChampion().add(players.get(i));
+    	//}
+    	//thisGame.setChampion(players.get(largestPosition.get(0)));
 		gameServ.update(thisGame);
     	return thisGame;
     }
