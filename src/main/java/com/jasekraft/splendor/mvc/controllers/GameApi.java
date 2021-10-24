@@ -178,7 +178,7 @@ public class GameApi {
     @RequestMapping(value="/games/{gameId}/takenoble/{playerId}", method = RequestMethod.POST)
     public Game takeNoble(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId, @RequestBody Map<String, Object> body) {
     	System.out.println("Taking a Noble");
-    	Game game = playerServ.addNoble(gameId, playerId, Long.valueOf((Integer)body.get("noble_id")));
+    	Game game = playerServ.addNoble(gameId, playerId, Long.valueOf((Integer)body.get("noble_id")), String.format("%s",body.get("tokenName")) );
     	return game;
     }
 }

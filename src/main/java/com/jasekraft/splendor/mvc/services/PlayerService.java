@@ -282,36 +282,55 @@ public class PlayerService {
     }
     
 	// add noble through route
-    public Game addNoble(Long gameId, Long playerId, Long nobleId) {
+    public Game addNoble(Long gameId, Long playerId, Long nobleId, String newTokenName) {
+
     	Player thisPlayer = find(playerId);
     	Noble noble = nobleServ.find(nobleId);
     	Game thisGame = gameServ.find(gameId);
-    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
-    		return thisGame;
-    	if(!thisGame.getNobles().contains(noble))
-    		return thisGame;
+
+    	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn()) {
+    		return thisGame;    		
+    	}
+    	if(!thisGame.getNobles().contains(noble)) {
+    		return thisGame;    		
+    	}
+
     	List<Card> playerCards = thisPlayer.getCards();
     	String playerOwnership = thisPlayer.getOwnedCards();
     	Map<String, Integer> playerPool = new HashMap<>();
+
     	playerPool.put("onyx", 0);
     	playerPool.put("sapphire", 0);
     	playerPool.put("ruby", 0);
     	playerPool.put("diamond", 0);
     	playerPool.put("emerald", 0);
+
     	Map<String, Integer> nobleCost = noble.getTokenCost();
+
     	int i = 0;
     	for(Card card : playerCards) {
     		if(playerOwnership.charAt(i)=='1')
     			playerPool.put(card.getTokenName(),1+ playerPool.get(card.getTokenName()));
     		i++;
     	}
+
     	// reject if nobles cost more than player
     	for(Map.Entry<String,Integer> entry : nobleCost.entrySet()) {
-    		if(entry.getValue() > playerPool.get(entry.getKey()))
-    			return thisGame;
+    		if(entry.getKey().equals(newTokenName)) {
+    			if(entry.getValue() > (playerPool.get(entry.getKey())+1) ) { // adds one to the hand if the player has submitted a card this turn. 
+        			System.out.println("Rejecting the Noble because you don't have the right cards");
+        			return thisGame;
+        		}
+    		}
+    		else {
+    			if(entry.getValue() > playerPool.get(entry.getKey())) {
+        			System.out.println("Rejecting the Noble because you don't have the right cards");
+        			return thisGame;
+        		}
+    		}
+    		
     	}
     	List<Noble> nobles = thisPlayer.getNobles();
-    	
     	nobles.add(noble);
     	thisGame.getNobles().remove(noble);
     	update(thisPlayer);
