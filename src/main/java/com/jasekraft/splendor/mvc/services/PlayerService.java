@@ -102,6 +102,7 @@ public class PlayerService {
     
     // add Tokens
 	public Game addTokens(Long gameId, Long playerId, List<Integer>tokens) {
+		System.out.println(tokens);
 		Player thisPlayer = find(playerId);
 		Game thisGame = gameServ.find(gameId);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
