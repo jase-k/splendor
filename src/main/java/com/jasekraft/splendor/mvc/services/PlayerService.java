@@ -1,6 +1,7 @@
 package com.jasekraft.splendor.mvc.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -164,13 +165,19 @@ public class PlayerService {
     	Player thisPlayer = find(playerId);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
     		return thisGame;
+    	// Setup for costReduction map
     	Card card = cardServ.find(cardId);
     	List<Card> cards = thisPlayer.getCards();
     	Map<String, Integer> costReduction = new HashMap<>();
+    	String playerOwn = thisPlayer.getOwnedCards();
+    	int total, k;
+    	// Slow but prevents null in costReduction Probably a better way
     	for(int i = 0; i<colors.length-1;i++) {
-    		int total = 0;
+    		total = 0;
+    		k = 0;
     		for(Card c : cards) {
-    			if(c.getTokenName().equals(colors[i])) total++;
+    			if(c.getTokenName().equals(colors[i]) && playerOwn.charAt(k) =='1') total++;
+    			k++;
     		}
     		costReduction.put(colors[i], total);
     	}
@@ -234,14 +241,7 @@ public class PlayerService {
     				gameTokens.add(token);
     			}
     		}
-    	}/*
-    	playerPool.put("gold", playerPool.get("gold")-extraNeeded);
-    	gamePool.put("gold", gamePool.get("gold")+extraNeeded);
-    	Token gold = tokenServ.find("gold");
-    	for(int i = 0; i<extraNeeded;i++) {
-    		playerTokens.remove(gold);	
-			gameTokens.add(gold);
-    	}*/
+    	}
     	// update happens before pCServ finds?
     	update(thisPlayer);
     	//gameServ.update(thisGame);
@@ -259,6 +259,8 @@ public class PlayerService {
     	Game thisGame = gameServ.find(gameId);
     	Player thisPlayer = find(playerId);
     	if(thisGame.getTurn()%thisGame.getPlayers().size() != thisPlayer.getTurn())
+    		return thisGame;
+    	if(thisGame.getTokenPool().get("gold")== 0)
     		return thisGame;
     	Card card = cardServ.find(cardId);
     	List<Deck> decks = thisGame.getDecks();
@@ -279,7 +281,8 @@ public class PlayerService {
        	update(thisPlayer);
 
 		thisGame = gameServ.update(thisGame);
-		return thisGame;
+		List<Integer> tokens = Arrays.asList(6);
+		return addTokens(gameId, playerId, tokens);
     }
     
 	// add noble through route
