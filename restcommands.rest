@@ -1,0 +1,113 @@
+# DB Initialization
+POST http://localhost:8080/dbinit
+Content-Type: application/json
+
+{
+    "password":"root"
+}
+
+### All Games
+GET http://localhost:8080/games/
+
+### One Game
+GET http://localhost:8080/games/1
+
+### All Users
+GET http://localhost:8080/users/
+
+### Create new game
+GET http://localhost:8080/games/new?user_id=1&character_id=1
+
+### Delete game
+DELETE http://localhost:8080/games/1
+
+### Create new user
+POST http://localhost:8080/users/new
+Content-Type: application/json
+
+{
+    "username": "Carl",
+    "email": "a@aol.com",
+    "password": "password",
+    "confirm": "password"
+}
+
+### Create 2nd new user
+POST http://localhost:8080/users/new
+Content-Type: application/json
+
+{
+    "username": "Beth",
+    "email": "b@aol.com",
+    "password": "password",
+    "confirm": "password"
+}
+
+### Delete user
+DELETE http://localhost:8080/users/1
+
+### Player joins game
+POST http://localhost:8080/games/join
+Content-Type: application/json
+
+{
+    "user_id": 2,
+    "game_id": 2,
+    "character_id":2
+}
+
+### Player leaves game
+POST http://localhost:8080/games/leave
+Content-Type: application/json
+
+{
+    "player_id": 3,
+    "game_id": 1
+}
+
+### game starts
+POST http://localhost:8080/games/start
+Content-Type: application/json
+
+{
+    "game_id": 2
+}
+
+### Takes tokens /games/{gameId}/taketokens/{playerId}
+# 1 - Onyx
+# 2 - Sapphire
+# 3 - Ruby
+# 4 - Diamond
+# 5 - Emerald
+# 6 - Gold
+POST http://localhost:8080/games/2/taketokens/3
+Content-Type: application/json
+
+{
+    "tokens":[2,2]
+}
+
+
+### Takes card /games/{gameId}/takecard/{playerId}
+POST http://localhost:8080/games/2/takecard/3
+Content-Type: application/json
+
+{
+    "card_id": 1
+}
+
+### Reserves card /games/{gameId}/takecard/{playerId}
+POST http://localhost:8080/games/2/reservecard/4
+Content-Type: application/json
+
+{
+    "card_id": 18
+}
+
+### Gives a player a noble
+POST http://localhost:8080/games/1/takenoble/1
+Content-Type: application/json
+
+{
+    "noble_id": 1
+}
