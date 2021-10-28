@@ -11,7 +11,7 @@ This call should be used only once! Unless you delete your DB schema
 This will initialize the db as below with the standard cards, tokens, and flowers rows added
 ![]{LINK}
 
-## /users/new method=[POST]
+### /users/new method=[POST]
 ```js
 let body = {
 	username: USERNAME,
@@ -32,7 +32,7 @@ let USER = {
 ```
 * note that the password is not returned, but it does get hashed in the db for login purposes.*
 
-# /login
+### /login
 ```js
 let body = {
 	username: USERNAME,
@@ -41,7 +41,7 @@ let body = {
 ```
 Upon successful login a ```USER``` object will be return. (see above)
 
-## /games/new method=[GET]
+### /games/new method=[GET]
 Adds a game object to database and will allow players to join. *This does not add decks, tokens, or nobles to the object yet. 
 ```js
 let GAME = {
@@ -55,7 +55,7 @@ let GAME = {
 }
 ```
 
-# /games/join method=[POST]
+### /games/join method=[POST]
 ```js
 let body = {
 	game_id = GAME_ID,
@@ -82,7 +82,7 @@ PLAYER = {
 }
 ```
 
-# /games/start method=[POST]
+### /games/start method=[POST]
 ```js
 let body = {
 	game_id = GAME_ID
@@ -94,9 +94,9 @@ Add tokens to the game
 The game is ready for game play at this point. 
 
 
-# Play Options
+## Play Options
 
-## /games/GAME_ID/takecard/PLAYER_ID         method = [POST]
+### /games/GAME_ID/takecard/PLAYER_ID         method = [POST]
 ```js
 let body {
 	card_id: CARD_ID
@@ -119,7 +119,7 @@ CARD = {
 }
 ```
 
-## /games/GAME_ID/taketokens/PLAYER_ID     method=[ POST]
+### /games/GAME_ID/taketokens/PLAYER_ID     method=[ POST]
 ```js
 Body {
 	Tokens : [ token_ids]
@@ -128,7 +128,7 @@ Body {
 This call removes tokens from the ```tokenPool``` of the ```GAME``` object and adds them to the ```PLAYER``` object. 
 *Constraints = Cannot take gold coin unless resering a card. (see below) Cannot take 2 of the same token if that would leave less than 2 tokens in the ```GAME.tokenPool```. Must take either 2 of the same tokens, or 3 different ones. 
 
-## /games/GAME_ID/reservecard/PLAYER_ID  		method = [POST]
+### /games/GAME_ID/reservecard/PLAYER_ID  		method = [POST]
 ```js
 let body {
 	card_id: CARD_ID
@@ -138,7 +138,7 @@ This call will remove one gold token from the ```GAME.tokenPool``` and add it to
 
 
 
-## /games/GAME_ID /takenoble/PLAYER_ID      method= [POST]
+### /games/GAME_ID /takenoble/PLAYER_ID      method= [POST]
 ```js
 let body {
  	Noble_id
@@ -161,48 +161,8 @@ NOBLE = {
 }
 ```
 
-## /endgame
-Body {
-	winner_id
-}
-
-
-
-
-```js
-USER = {
-	"id" : 0,
-	"username" : "jaecheese",
-	"created_at" : "2021-10-15",
-	"updated_at" : "2021-10-15",
-}
-```
-```js
-DECK = {
-	"id" : 0, 
-	"game_id" : 0, 
-	"color" : "blue", 
-	"cards" : [{CARD}]
- }
-```
-
-
-```js
-CARD = { 
-	"id" : 0,
-	"score" : 0, 
-	"deck_id" : 0, 
-	"token" : "diamond",
-	"cost" : {
-		"ruby" : 3, 
-		"emerald" : 0, 
-		"sapphire" : 0, 
-		"diamond" : 0, 
-		"onyx" : 3
-	}
-}
-```
-# /games/{id}
+### /games/GAME_ID method=[GET]
+This call will return a updated ```GAME``` object. 
 ```js
 GAME = {
 	"id" : 0,
@@ -214,239 +174,1179 @@ GAME = {
 	"nobles" : [{NOBLE}] //Always one more than the number of players to start
 }
 ```
+*Full Game Object Example Below*
+
+## Other Notes
+
+### Game End
+Game ends at the end of the round when one or more player has 15 points. (Calculated by owned cards and nobles)
+The game object will appoint the champion at this point, but allow for further game play. 
 
 
 
+
+COMPLETE ```GAME``` OBJECT SAMPLE DATA
 ```js
-
-GAME = {
-	"id" : 0,
-	"champion" : {
-					"id" : 0,
-					"username" : "jaecheese",
-					"created_at" : "2021-10-15",
-					"updated_at" : "2021-10-15",
-				},
-	"turn" : 1
-	"tokens" : {
-					"ruby" : 0, 
-					"emerald" : 0, 
-					"sapphire" : 0, 
-					"diamond" : 0, 
-					"onyx" : 0
-				},
-	"nobles" : [
-					{ 
-						"id" : 0, 
-						"score" : 3, 
-						"cost" : {
-							"ruby" : 0, 
-							"emerald" : 0, 
-							"sapphire" : 0, 
-							"diamond" : 0, 
-							"onyx" : 0
-					},
-					{ 
-						"id" : 0, 
-						"score" : 3, 
-						"cost" : {
-							"ruby" : 0, 
-							"emerald" : 0, 
-							"sapphire" : 0, 
-							"diamond" : 0, 
-							"onyx" : 0
-					},
-				]
-	"players" : [ 
-					{
-						"id" : 0,
-						"user" : {
-									"id" : 0,
-									"username" : "jaecheese",
-									"created_at" : "2021-10-15",
-									"updated_at" : "2021-10-15",
-								},
-						"nobles" : 	[
-										{ 
-										"id" : 0, 
-										"score" : 3, 
-										"cost" : {
-											"ruby" : 0, 
-											"emerald" : 0, 
-											"sapphire" : 0, 
-											"diamond" : 0, 
-											"onyx" : 0
-											}
-										},
-									], 
-						"tokens" : 	{
-										"ruby" : 0, 
-										"emerald" : 0, 
-										"sapphire" : 0, 
-										"diamond" : 0, 
-										"onyx" : 0
-									},
-						"cards" : [
-									{ 
-										"id" : 0,
-										"score" : 0, 
-										"deck_id" : 0, 
-										"token" : "ruby",
-										"cost" : {
-													"ruby" : 0, 
-													"emerald" : 0, 
-													"sapphire" : 0, 
-													"diamond" : 0, 
-													"onyx" : 0
-												}
-									}
-									],
-						},
-						{
-						"id" : 0,
-						"user" : {
-									"id" : 0,
-									"username" : "jaecheese",
-									"created_at" : "2021-10-15",
-									"updated_at" : "2021-10-15",
-								},
-						"nobles" : 	[
-										{ 
-										"id" : 0, 
-										"score" : 3, 
-										"cost" : {
-											"ruby" : 0, 
-											"emerald" : 0, 
-											"sapphire" : 0, 
-											"diamond" : 0, 
-											"onyx" : 0
-											}
-										},
-									], 
-						"tokens" : 	{
-										"ruby" : 0, 
-										"emerald" : 0, 
-										"sapphire" : 0, 
-										"diamond" : 0, 
-										"onyx" : 0
-									},
-						"cards" : [
-									{ 
-										"id" : 0,
-										"score" : 0, 
-										"deck_id" : 0, 
-										"token" : "ruby",
-										"cost" : {
-													"ruby" : 0, 
-													"emerald" : 0, 
-													"sapphire" : 0, 
-													"diamond" : 0, 
-													"onyx" : 0
-												}
-									}
-									],
-						},
-					]
-	"decks" : [ 
-		{
-			"id" : 0, 
-			"game_id" : 0, 
-			"color" : "green", 
-			"cards" : [	
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "ruby",
-								"cost" : {
-											"ruby" : 0, 
-											"emerald" : 1, 
-											"sapphire" : 1, 
-											"diamond" : 1, 
-											"onyx" : 1
-										}
-							},
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "diamond",
-								"cost" : {
-											"ruby" : 4, 
-											"emerald" : 0, 
-											"sapphire" : 0, 
-											"diamond" : 0, 
-											"onyx" : 0
-										}
-							},// alot more cards would go here
-						]
-		},
-		{
-			"id" : 0, 
-			"game_id" : 0, 
-			"color" : "yellow", 
-			"cards" : [	
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "ruby",
-								"cost" : {
-											"ruby" : 0, 
-											"emerald" : 1, 
-											"sapphire" : 1, 
-											"diamond" : 1, 
-											"onyx" : 1
-										}
-							},
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "diamond",
-								"cost" : {
-											"ruby" : 4, 
-											"emerald" : 0, 
-											"sapphire" : 0, 
-											"diamond" : 0, 
-											"onyx" : 0
-										}
-							},// alot more cards would go here
-						]
-		},
-		{
-			"id" : 0, 
-			"game_id" : 0, 
-			"color" : "blue", 
-			"cards" : [	
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "ruby",
-								"cost" : {
-											"ruby" : 0, 
-											"emerald" : 1, 
-											"sapphire" : 1, 
-											"diamond" : 1, 
-											"onyx" : 1
-										}
-							},
-							{ 
-								"id" : 0,
-								"score" : 0, 
-								"deck_id" : 0, 
-								"token" : "diamond",
-								"cost" : {
-											"ruby" : 4, 
-											"emerald" : 0, 
-											"sapphire" : 0, 
-											"diamond" : 0, 
-											"onyx" : 0
-										}
-							},// alot more cards would go here
-						]
-		},
-			]
+{
+    "id": 7,
+    "turn": 0,
+    "decks": [
+        {
+            "id": 16,
+            "color": "green",
+            "current_position": 0,
+            "cards": [
+                {
+                    "id": 16,
+                    "score": 1,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 4
+                    }
+                },
+                {
+                    "id": 29,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 32,
+                    "score": 1,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 4,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 25,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "sapphire": 1,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 33,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 1,
+                        "emerald": 0,
+                        "sapphire": 1,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 36,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 0,
+                        "emerald": 1,
+                        "sapphire": 3,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 30,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 1,
+                        "emerald": 2,
+                        "sapphire": 1,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 22,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "ruby": 0,
+                        "sapphire": 1
+                    }
+                },
+                {
+                    "id": 35,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 26,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 1,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 13,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 4,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 39,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 2,
+                        "emerald": 0,
+                        "sapphire": 1,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 7,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 2,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 5,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 3,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 31,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 1,
+                        "emerald": 2,
+                        "sapphire": 2,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 34,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 1,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 21,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "ruby": 0,
+                        "sapphire": 3
+                    }
+                },
+                {
+                    "id": 14,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "sapphire": 0,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 10,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 2,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 15,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "sapphire": 0,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 27,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 2,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 12,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 1,
+                        "emerald": 0,
+                        "sapphire": 1,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 19,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 2,
+                        "emerald": 0,
+                        "ruby": 0,
+                        "sapphire": 2
+                    }
+                },
+                {
+                    "id": 18,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 1,
+                        "ruby": 0,
+                        "sapphire": 2
+                    }
+                },
+                {
+                    "id": 11,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 2,
+                        "emerald": 2,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 20,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 3,
+                        "ruby": 1,
+                        "sapphire": 1
+                    }
+                },
+                {
+                    "id": 2,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "sapphire": 0,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 38,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 2,
+                        "emerald": 0,
+                        "sapphire": 1,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 24,
+                    "score": 1,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 4,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "ruby": 0,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 6,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 0,
+                        "emerald": 1,
+                        "sapphire": 2,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 28,
+                    "score": 0,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 17,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "ruby": 0,
+                        "sapphire": 1
+                    }
+                },
+                {
+                    "id": 23,
+                    "score": 0,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 2,
+                        "emerald": 1,
+                        "ruby": 0,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 8,
+                    "score": 1,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 4,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 37,
+                    "score": 0,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 40,
+                    "score": 1,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 4,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 9,
+                    "score": 0,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 1,
+                        "emerald": 1,
+                        "sapphire": 0,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 1,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 0,
+                        "emerald": 1,
+                        "sapphire": 1,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 3,
+                    "score": 0,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "color": "yellow",
+            "current_position": 0,
+            "cards": [
+                {
+                    "id": 53,
+                    "score": 1,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "ruby": 0,
+                        "sapphire": 2
+                    }
+                },
+                {
+                    "id": 69,
+                    "score": 2,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 5,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 3,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 48,
+                    "score": 1,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 3,
+                        "sapphire": 2,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 42,
+                    "score": 1,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 2,
+                        "emerald": 3,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 41,
+                    "score": 1,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "sapphire": 3,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 60,
+                    "score": 1,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 3,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 46,
+                    "score": 3,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 6,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 52,
+                    "score": 3,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 6,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 50,
+                    "score": 2,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 5,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 65,
+                    "score": 1,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 54,
+                    "score": 1,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "ruby": 2,
+                        "sapphire": 3
+                    }
+                },
+                {
+                    "id": 56,
+                    "score": 2,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 5,
+                        "emerald": 0,
+                        "ruby": 0,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 67,
+                    "score": 2,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 4,
+                        "onyx": 1,
+                        "emerald": 0,
+                        "sapphire": 2,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 64,
+                    "score": 3,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 6,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 68,
+                    "score": 2,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 5
+                    }
+                },
+                {
+                    "id": 45,
+                    "score": 2,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 5,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 70,
+                    "score": 3,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 6,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 49,
+                    "score": 2,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 2,
+                        "onyx": 4,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 1
+                    }
+                },
+                {
+                    "id": 63,
+                    "score": 2,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 5
+                    }
+                },
+                {
+                    "id": 55,
+                    "score": 2,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 1,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "ruby": 0,
+                        "sapphire": 4
+                    }
+                },
+                {
+                    "id": 43,
+                    "score": 2,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 4,
+                        "sapphire": 1,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 57,
+                    "score": 2,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 3,
+                        "ruby": 0,
+                        "sapphire": 5
+                    }
+                },
+                {
+                    "id": 66,
+                    "score": 1,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 0,
+                        "emerald": 2,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 47,
+                    "score": 1,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 2,
+                        "emerald": 3,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 44,
+                    "score": 2,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 5,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 58,
+                    "score": 3,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "ruby": 6,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 59,
+                    "score": 1,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 3,
+                        "sapphire": 3,
+                        "ruby": 2
+                    }
+                },
+                {
+                    "id": 61,
+                    "score": 2,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 2,
+                        "emerald": 1,
+                        "sapphire": 0,
+                        "ruby": 4
+                    }
+                },
+                {
+                    "id": 62,
+                    "score": 2,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 5,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 51,
+                    "score": 2,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 5,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "color": "blue",
+            "current_position": 0,
+            "cards": [
+                {
+                    "id": 76,
+                    "score": 4,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 7,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 71,
+                    "score": 3,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 0,
+                        "emerald": 5,
+                        "sapphire": 3,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 73,
+                    "score": 4,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 3,
+                        "sapphire": 0,
+                        "ruby": 6
+                    }
+                },
+                {
+                    "id": 83,
+                    "score": 3,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 3,
+                        "sapphire": 3,
+                        "ruby": 5
+                    }
+                },
+                {
+                    "id": 74,
+                    "score": 5,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 7
+                    }
+                },
+                {
+                    "id": 80,
+                    "score": 4,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 7,
+                        "ruby": 0,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 81,
+                    "score": 4,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 6,
+                        "ruby": 3,
+                        "sapphire": 3
+                    }
+                },
+                {
+                    "id": 77,
+                    "score": 4,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 6,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 3,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 78,
+                    "score": 5,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 7,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 3,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 85,
+                    "score": 4,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 6,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 79,
+                    "score": 3,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 3,
+                        "emerald": 3,
+                        "ruby": 0,
+                        "sapphire": 5
+                    }
+                },
+                {
+                    "id": 75,
+                    "score": 3,
+                    "tokenName": "sapphire",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 5,
+                        "emerald": 3,
+                        "sapphire": 0,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 90,
+                    "score": 5,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "onyx": 0,
+                        "emerald": 3,
+                        "sapphire": 7,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 82,
+                    "score": 5,
+                    "tokenName": "ruby",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 7,
+                        "ruby": 3,
+                        "sapphire": 0
+                    }
+                },
+                {
+                    "id": 88,
+                    "score": 4,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 7,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 86,
+                    "score": 5,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 7,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 87,
+                    "score": 3,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 5,
+                        "onyx": 3,
+                        "emerald": 0,
+                        "sapphire": 3,
+                        "ruby": 3
+                    }
+                },
+                {
+                    "id": 84,
+                    "score": 4,
+                    "tokenName": "diamond",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 7,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 89,
+                    "score": 4,
+                    "tokenName": "emerald",
+                    "tokenCost": {
+                        "diamond": 3,
+                        "onyx": 0,
+                        "emerald": 3,
+                        "sapphire": 6,
+                        "ruby": 0
+                    }
+                },
+                {
+                    "id": 72,
+                    "score": 4,
+                    "tokenName": "onyx",
+                    "tokenCost": {
+                        "diamond": 0,
+                        "onyx": 0,
+                        "emerald": 0,
+                        "sapphire": 0,
+                        "ruby": 7
+                    }
+                }
+            ]
+        }
+    ],
+    "champion": [],
+    "tokenPool": {
+        "gold": 5,
+        "diamond": 4,
+        "onyx": 4,
+        "emerald": 4,
+        "sapphire": 4,
+        "ruby": 4
+    },
+    "nobles": [
+        {
+            "id": 3,
+            "score": 3,
+            "tokenCost": {
+                "diamond": 4,
+                "onyx": 0,
+                "emerald": 0,
+                "ruby": 0,
+                "sapphire": 4
+            }
+        },
+        {
+            "id": 5,
+            "score": 3,
+            "tokenCost": {
+                "diamond": 0,
+                "onyx": 0,
+                "emerald": 4,
+                "ruby": 0,
+                "sapphire": 4
+            }
+        }
+    ],
+    "players": [
+        {
+            "id": 12,
+            "character_id": 1,
+            "user": {
+                "id": 4,
+                "email": "jasekraft12@gmail.com",
+                "username": "jaecheese"
+            },
+            "cards": [],
+            "turn": 0,
+            "tokenPool": {
+                "gold": 0,
+                "diamond": 0,
+                "onyx": 0,
+                "emerald": 0,
+                "ruby": 0,
+                "sapphire": 0
+            },
+            "ownedCards": "",
+            "nobles": []
+        }
+    ]
 }
 ```
