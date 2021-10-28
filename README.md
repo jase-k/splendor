@@ -1,58 +1,85 @@
-Splendor Game App
-Game Set-Up
+## Splendor Game API
+# Game Set-Up
+To get started with this API, you can clone this repo, initialize the app and run the post request localhost:8080/dbinit with your MySQL password in the body: 
+```js
+let body = {
+	password: DB_PASSWORD_HERE
+	}
+```
+Make sure you create a schema in MySQL called 'splendor_schema'
+This call should be used only once! Unless you delete your DB schema
+This will initialize the db as below with the standard cards, tokens, and flowers rows added
+![]{LINK}
 
-/newgame
-Adds a game object to database
+# /users/new method=[POST]
 
-/joingame
-Adds player to game
+# /games/new method=[GET]
+Adds a game object to database and will allow players to join. *This does not add decks, tokens, or flowers to the object yet. 
+```js
+GAME = {
+	"id" : 0,
+	"champion" : [{USER}] //empty if game is unfinished | more than one if tie
+	"turn" : 0
+	"tokens" :[ {TOKEN}] //Always 0-40 tokens
+	"players" : [{PLAYER}] //Always 2-4 players
+	"decks" : [] //Always have 3
+	"nobles" : [] //placeholder for nobles empty until garm
+}
+```
+# /games/join method=[POST]
+```js
+let body = {
+	game_id = GAME_ID,
+	player_id = PLAYER_ID
+	}
+```
+Adds player to game new Game object
 
-/startgame
+# /games/start method=[POST]
+```js
+let body = {
+	game_id = GAME_ID
+	}
+```
 Adds 3 decks for game and shuffle them 
-Add nobles to the game
+Add flowers to the game
 Add tokens to the game
+The game is ready for game play at this point. 
 
 
-Play Options
+## Play Options
 
-/taketokens     method=[ POST]
+# /taketokens     method=[ POST]
+```js
 Body {
 	Tokens : [ token_ids]
 }
+```
+This call adds
 
 
-/takecard       method = [POST]
+# /takecard       method = [POST]
 Body {
 	cardobject
 }
 
 
-/takenoble     method= [POST]
+# /takenoble     method= [POST]
 Body {
  	Noble_id
 }
 
-/reserveacard 		method = [POST]
+# /reserveacard 		method = [POST]
 Body {
 Card_id
 }
 
-/endgame
+# /endgame
 Body {
 	winner_id
 }
 
-```js
-GAME = {
-	"id" : 0,
-	"champion" : {USER} //empty if game is unfinished
-	"turn" : 1
-	"tokens" :[ {TOKEN}] //Always 0-40 tokens
-	"players" : [{PLAYER}] //Always 2-4 players
-	"decks" : [{DECK}] //Always have 3
-	"nobles" : [{NOBLE}] //Always one more than the number of players
-}
-```
+
 ```js
 PLAYER = {
 	"id" : 0,
@@ -114,8 +141,23 @@ CARD = {
 	}
 }
 ```
+# /games/{id}
+```js
+GAME = {
+	"id" : 0,
+	"champion" : [{USER}] //empty if game is unfinished | more than one if tie
+	"turn" : 0 //total number of turns that have been played
+	"tokens" :[{TOKEN}] //Always 0-40 tokens
+	"players" : [{PLAYER}] //Always 2-4 players
+	"decks" : [{DECK}] //Always have length of 3 | Each deck will have a list of cards
+	"nobles" : [{NOBLE}] //Always one more than the number of players to start
+}
+```
+
+
 
 ```js
+
 GAME = {
 	"id" : 0,
 	"champion" : {
