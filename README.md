@@ -9,7 +9,7 @@ let body = {
 Make sure you create a schema in MySQL called 'splendor_schema'
 This call should be used only once! Unless you delete your DB schema
 This will initialize the db as below with the standard cards, tokens, and flowers rows added
-![]{LINK}
+!["DB ERD"](https://github.com/jase-k/splendor/blob/development/splendor%20ERD.PNG)
 
 ### /users/new method=[POST]
 ```js
